@@ -210,6 +210,63 @@ body.resting #app{padding-bottom:150px;}
 
 .brand{display:flex; align-items:center; gap:12px;}
 .brand-logo{width:52px; height:52px; border-radius:13px; flex-shrink:0; object-fit:cover;}
+
+/* ÚLTIMOS ENTRENAMIENTOS (ficha de ejercicio) */
+.prev-card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:13px 15px; margin-bottom:9px;}
+.prev-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+.prev-date{font-size:14px; font-weight:700; color:var(--text);}
+.prev-tag{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+  color:#fff; background:var(--accent); border-radius:5px; padding:2px 7px;}
+.prev-tag.muted{background:var(--surface-2); color:var(--muted);}
+.prev-sets{display:flex; flex-wrap:wrap; gap:6px;}
+.prev-set{background:var(--surface-2); border-radius:9px; padding:7px 10px;
+  display:flex; align-items:center; gap:8px;}
+.prev-set-n{font-size:10.5px; font-weight:700; color:var(--muted);}
+.prev-set-val{display:flex; align-items:baseline; gap:4px;}
+.prev-reps{font-size:14.5px; font-weight:700; color:var(--text);}
+.prev-x{font-size:11px; color:var(--muted);}
+.prev-peso{font-size:14.5px; font-weight:700; color:var(--accent);}
+.prev-foot{font-size:12px; color:var(--muted); margin-top:10px;}
+.prev-foot b{color:var(--text);}
+.prev-trend{font-size:12.5px; font-weight:600; border-radius:9px; padding:9px 12px; margin-top:4px;}
+.prev-trend.up{background:#EAF6EE; color:#2E8B57;}
+.prev-trend.down{background:#FDF1E5; color:#B4661F;}
+.prev-trend.same{background:var(--surface-2); color:#4A5568;}
+
+/* HISTORIAL */
+.hist-summary{display:flex; gap:8px; margin:16px 0 20px;}
+.hist-sum-box{flex:1; background:var(--surface); border:1px solid var(--line);
+  border-radius:13px; padding:13px 8px; text-align:center;}
+.hist-sum-val{font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--accent);}
+.hist-sum-key{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-top:3px;}
+.hist-month{font-size:11px; letter-spacing:.13em; text-transform:uppercase; font-weight:700;
+  color:var(--muted); margin:20px 0 9px;}
+.hist-card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; margin-bottom:9px;}
+.hist-card:active{border-color:var(--accent);}
+.hist-card-head{display:flex; align-items:flex-start; justify-content:space-between;}
+.hist-card-routine{font-size:16px; font-weight:700;}
+.hist-card-date{font-size:12.5px; color:var(--muted); margin-top:1px;}
+.hist-card-arrow{font-size:22px; color:var(--accent); line-height:1;}
+.hist-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+.hist-chip{background:var(--surface-2); border-radius:20px; padding:4px 11px;
+  font-size:11.5px; font-weight:600; color:#4A5568;}
+.hist-chip.strong{background:var(--accent); color:#fff;}
+.hist-card-list{font-size:12px; color:var(--muted); margin-top:9px; line-height:1.45;}
+
+/* DETALLE DE UN DÍA */
+.hd-card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; margin-bottom:10px;}
+.hd-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.hd-name{font-size:15.5px; font-weight:700;}
+.hd-summary{font-size:12.5px; color:var(--accent); font-weight:600; margin-top:3px;}
+.hd-sets{display:flex; flex-direction:column; gap:5px; margin-top:11px;}
+.hd-set{display:flex; align-items:center; gap:12px; background:var(--surface-2);
+  border-radius:9px; padding:7px 11px;}
+.hd-set-n{font-size:10.5px; font-weight:700; color:var(--muted); min-width:20px;}
+.hd-set-val{display:flex; align-items:baseline; gap:5px;}
+.hd-note{font-size:11.5px; color:var(--muted); font-style:italic; margin-top:9px;}
 .day-letter{font-size:13px; font-weight:700; color:var(--text);}
 .day-meter{width:9px; height:52px; border-radius:5px; background:var(--surface-2);
   overflow:hidden; display:flex; flex-direction:column-reverse;}
@@ -873,7 +930,7 @@ LITE_CATALOG_RAW.forEach(([nombre,grupoMuscular,subgrupo,tipoEntrenamiento,categ
    Cada ejercicio incluye tipoMovimiento (códigos de MOVEMENT_TYPES, puede ser compuesto
    p.ej. ["FUE","UNI"]) y objetivo (frase corta de qué busca ese ejercicio). */
 function defaultDescansoPorTipo(code){
-  const map = {FUE:120, HIP:90, POT:150, MOV:30, UNI:90, EST:45, COR:45, CAR:90, COND:120, COOR:60};
+  const map = {FUE:120, POT:120, HIP:90, COND:90, COR:60, EST:60, MOV:60, UNI:90, CAR:90, COOR:60};
   return map[code] || 90;
 }
 const RUTINA2_RAW = [
@@ -884,6 +941,7 @@ const RUTINA2_RAW = [
   ["e2_remo_maquina","Remo en máquina",3,8,10,"reps","",["HIP"],"Espalda + bíceps",["Espalda","Bíceps"]],
   ["e2_salto_al_cajon","Salto al cajón",3,4,5,"reps","",["POT"],"Potencia de piernas",["Piernas"]],
   ["e2_lanzamiento_balon_frente","Lanzamiento de balón medicinal al frente",3,6,6,"reps","",["POT"],"Potencia de tren superior + core",["Tren superior","Core"]],
+  ["e2_landmine_push_press_rot","Landmine Push Press rotacional",3,6,6,"reps","por lado",["POT"],"Potencia explosiva frontal y vertical, transfiriendo fuerza desde las piernas y la cadera hacia el tren superior",["Tren superior","Core","Piernas"]],
   ["e2_zancada_atras_elevacion_rodilla","Zancada atrás + elevación de rodilla",3,8,8,"reps","por pierna",["UNI"],"Fuerza unilateral + equilibrio",["Piernas"]],
   ["e2_pallof_press","Pallof press",3,10,10,"reps","por lado",["COR"],"Resistencia a la rotación",["Core"]],
   ["e2_dead_bug","Dead bug",3,8,10,"reps","por lado",["COR"],"Control lumbo-pélvico",["Core"]],
@@ -1075,6 +1133,34 @@ const DIA1_DETAIL = {
     ejecucion:["A cuatro apoyos, pasa un brazo por debajo del cuerpo.","Después realiza la rotación hacia el techo.","Movimiento lento y controlado, buscando amplitud sin forzar."]
   }
 };
+DIA1_DETAIL.e2_landmine_push_press_rot = {
+  descansoSeg: 120,
+  ejecucion:[
+    "Colócate frente al extremo de la barra en una postura atlética (pies al ancho de los hombros).",
+    "Sujeta la barra con una mano bajándola hacia la cadera del lado opuesto.",
+    "Realiza una rápida y ligera flexión de rodillas y cadera.",
+    "Extiende las piernas y empuja la cadera de forma explosiva para darle inercia a la barra hacia arriba.",
+    "Justo a la altura del pecho, realiza el cambio rápido soltando la barra con la primera mano y recogiéndola con la contraria.",
+    "Remata el movimiento con un press potente hacia arriba y adelante, pivotando ligeramente el pie del mismo lado que empuja.",
+    "Baja la barra de forma controlada y repite."
+  ],
+  errores:[
+    "Levantar el peso únicamente a base de fuerza de brazo y hombro, sin usar las piernas.",
+    "Utilizar demasiada carga, lo que convierte el ejercicio en un press lento y elimina el componente de potencia.",
+    "Hacer una pausa o frenar la barra a la altura del pecho, perdiendo toda la inercia generada desde el suelo.",
+    "Mantener los pies completamente rígidos y pegados al suelo en lugar de acompañar el empuje pivotando el pie trasero."
+  ],
+  consejos:[
+    "En el cambio de mano a la altura del pecho, la barra debe sentirse momentáneamente \"sin gravedad\" gracias al impulso de tus piernas.",
+    "El movimiento debe fluir como un solo bloque: las piernas arrancan, el core estabiliza, se hace el cambio y el brazo finaliza como un látigo.",
+    "Respeta los 2 minutos de descanso entre series: al ser potencia, el sistema nervioso necesita recuperarse para no perder velocidad."
+  ],
+  progresion:[
+    "Aumenta la carga solo si mantienes la misma velocidad y calidad de movimiento.",
+    "En potencia, más peso no significa mejor estímulo."
+  ],
+  observaciones:["Sustituye al lanzamiento de balón medicinal (sin espacio para lanzar)."]
+};
 Object.keys(DIA1_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA1_DETAIL[id]); });
 
 /* ---- Ficha técnica completa del Día 3 (fuerza funcional + unilateral) ---- */
@@ -1233,7 +1319,7 @@ Object.keys(DIA4_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA4
 
 const DEFAULT_ROUTINES = {
   dia1: {id:"dia1", nombre:"Día 1", tags:"Fuerza + Potencia",
-      ejercicios:["e2_prensa_piernas","e2_dominadas_asistidas","e2_press_pecho_maquina","e2_remo_maquina","e2_salto_al_cajon","e2_lanzamiento_balon_frente","e2_zancada_atras_elevacion_rodilla","e2_pallof_press","e2_dead_bug","e2_thread_the_needle"]},
+      ejercicios:["e2_salto_al_cajon","e2_landmine_push_press_rot","e2_prensa_piernas","e2_dominadas_asistidas","e2_press_pecho_maquina","e2_remo_maquina","e2_zancada_atras_elevacion_rodilla","e2_pallof_press","e2_dead_bug","e2_thread_the_needle"]},
   dia2: {id:"dia2", nombre:"Día 2", tags:"Movilidad + Equilibrio + Estabilidad",
       ejercicios:["e2_movilidad_tobillo","e2_90_90_hip_switches","e2_rotacion_toracica","e2_movilidad_hombro","e2_equilibrio_unipodal_bosu","e2_single_leg_reach","e2_bosu_squat_reach","e2_bird_dog","e2_side_plank","e2_copenhagen_plank_corto","e2_gemelo_unilateral_pie","e2_estiramiento_flexor_cadera"]},
   dia3: {id:"dia3", nombre:"Día 3", tags:"Fuerza funcional + Unilateral",
@@ -1243,7 +1329,9 @@ const DEFAULT_ROUTINES = {
 };
 
 /* ---------- Cronómetro inteligente de descanso: category / body_part ---------- */
-const REST_DICT = {POT:180, FUE:180, HIP:90, COND:90, COR:60, EST:60, MOV:60};
+// Descansos entre series (s). POT/FUE a 120: el SNC se recupera lo suficiente para
+// mantener explosividad y técnica, sin enfriarse ni alargar la sesión.
+const REST_DICT = {POT:120, FUE:120, HIP:90, COND:90, COR:60, EST:60, MOV:60};
 function categoryOf(ex){
   if(ex.category) return ex.category;
   const order = ["POT","FUE","HIP","COND","COR","EST","MOV"];
@@ -1299,7 +1387,7 @@ const DEFAULT_SUPPLEMENTS = [
 // La clave mantiene el nombre antiguo a propósito: cambiarla haría que la app no
 // encontrara los datos ya guardados en dispositivos que venían de la versión anterior.
 const STORAGE_KEY = "gymlog_db";
-const SCHEMA_VERSION = 5; // subir este número cuando se actualice el catálogo/rutina por defecto
+const SCHEMA_VERSION = 7; // subir este número cuando se actualice el catálogo/rutina por defecto
 
 /* ---------- Capa de almacenamiento ----------
    window.storage solo existe dentro del entorno de artifacts de Claude. Si la app se abre
@@ -1333,7 +1421,22 @@ const Storage = (function(){
     },
     async set(key, value){
       if(hasArtifactStorage){ await window.storage.set(key, value, false); return; }
-      if(hasLocal){ window.localStorage.setItem(key, value); return; }
+      if(hasLocal){
+        try{
+          window.localStorage.setItem(key, value);
+        }catch(e){
+          // Cuota llena: liberamos copias de seguridad antiguas y reintentamos una vez.
+          // Si aun así falla, propagamos para que el usuario reciba el aviso.
+          try{
+            Object.keys(window.localStorage)
+              .filter(k=> k!==key && k.indexOf("gymlog_db")===0)
+              .forEach(k=> window.localStorage.removeItem(k));
+            window.localStorage.setItem(key, value);
+            return;
+          }catch(e2){ throw e; }
+        }
+        return;
+      }
       memory[key] = value;
     }
   };
@@ -1386,6 +1489,32 @@ function reconcileDB(db){
     db.routines = JSON.parse(JSON.stringify(DEFAULT_ROUTINES));
     db.schemaVersion = SCHEMA_VERSION;
   }
+
+  // GARANTÍA DE HISTORIAL: cualquier ejercicio que aparezca en una sesión pasada debe
+  // seguir existiendo en el catálogo, aunque ya no forme parte de ninguna rutina. Así,
+  // al cambiar ejercicios de la rutina, el historial antiguo sigue mostrando su nombre
+  // y sus datos en lugar de "Ejercicio eliminado".
+  const usados = new Set();
+  (db.sessions||[]).forEach(s=> (s.ejercicios||[]).forEach(e=> usados.add(e.exId)));
+  if(db.draftSession) (db.draftSession.ejercicios||[]).forEach(e=> usados.add(e.exId));
+  usados.forEach(id=>{
+    if(db.exercises[id]) return;
+    if(DEFAULT_EXERCISES[id]){
+      db.exercises[id] = normalizeExercise(JSON.parse(JSON.stringify(DEFAULT_EXERCISES[id])));
+    } else {
+      // Ni siquiera está en el catálogo de fábrica: creamos una ficha mínima para no
+      // perder la referencia en el historial.
+      db.exercises[id] = {
+        id, nombre:"Ejercicio anterior", grupo:[], series:3, repMin:8, repMax:10,
+        unidad:"reps", repNota:"", rirMin:null, rirMax:null, descansoSeg:90, tipo:"",
+        descripcion:"", ejecucion:[], errores:[], consejos:[], progresion:[],
+        observaciones:["Conservado para que tu historial siga siendo legible."],
+        tipoMovimiento:[], objetivo:"", category:"HIP", body_part:"Core/FullBody", archivado:true
+      };
+    }
+    db.exercises[id].archivado = true;
+  });
+
   return db;
 }
 
@@ -1478,16 +1607,70 @@ function daysAgoISO(n){
   return isoDateStr(d);
 }
 
+/* ---------- Formato legible de una serie ---------- */
+// Devuelve las dos mitades por separado para poder darles estilo distinto.
+function setParts(def, set){
+  const unidad = (def && def.unidad) || "reps";
+  const carga = (set.peso===""||set.peso==null) ? null : set.peso;
+  let repTxt;
+  if(unidad==="segundos") repTxt = set.reps+" s";
+  else if(unidad==="m")   repTxt = set.reps+" m";
+  else                    repTxt = set.reps+" rep";
+  const cargaTxt = carga===null ? null : (carga+" kg");
+  return {repTxt, cargaTxt};
+}
+function setText(def, set){
+  const p = setParts(def, set);
+  return p.cargaTxt ? (p.repTxt+" × "+p.cargaTxt) : p.repTxt;
+}
+// Resumen de una lista de series: "3×8 rep · 100 kg" o "8, 8, 7 rep · 100 kg"
+function seriesSummary(def, series){
+  if(!series.length) return "";
+  const reps = series.map(s=>s.reps);
+  const pesos = series.map(s=>s.peso).filter(p=>p!==""&&p!=null);
+  const unidad = (def && def.unidad) || "reps";
+  const uTxt = unidad==="segundos" ? "s" : unidad==="m" ? "m" : "rep";
+  const mismasReps = reps.every(r=>r===reps[0]);
+  const repPart = mismasReps ? (series.length+"×"+reps[0]+" "+uTxt) : (reps.join(", ")+" "+uTxt);
+  if(!pesos.length) return repPart;
+  const mismoPeso = pesos.every(p=>p===pesos[0]);
+  const pesoPart = mismoPeso ? (pesos[0]+" kg") : (pesos.join("/")+" kg");
+  return repPart+" · "+pesoPart;
+}
+// Acepta lo que escriba el usuario y lo deja en un número válido.
+// Convierte la coma decimal española en punto y descarta cualquier otro carácter.
+function cleanNumberInput(valor, permitirDecimales){
+  let v = String(valor).replace(",", ".");
+  v = permitirDecimales ? v.replace(/[^0-9.]/g, "") : v.replace(/[^0-9]/g, "");
+  if(permitirDecimales){
+    const partes = v.split(".");
+    if(partes.length > 2) v = partes[0] + "." + partes.slice(1).join(""); // un solo punto
+  }
+  return v;
+}
+// Parseo tolerante: nunca devuelve NaN, acepta coma o punto.
+function num(valor){
+  const n = parseFloat(String(valor).replace(",", "."));
+  return isFinite(n) ? n : 0;
+}
+function volumenSerie(set){
+  const p = num(set.peso), r = num(set.reps);
+  return p*r;
+}
+
 /* ---------- Análisis de las últimas 2 semanas ---------- */
 function analyzeLastTwoWeeks(){
-  const hoy = new Date();
-  const dias = []; // 14 días, del más antiguo al más reciente
+  // dias[0] es el más antiguo y dias[13] es hoy. Calculamos las fechas UNA vez
+  // y usamos conjuntos para las búsquedas, en vez de recorrer listas por cada sesión.
+  const dias = [];
   for(let i=13; i>=0; i--) dias.push(daysAgoISO(i));
+  const ventana = new Set(dias);
+  const hace = (i)=> dias[13-i]; // i días atrás (0 = hoy)
 
   const entrenados = new Set();
   (DB.sessions||[]).forEach(s=>{
     const iso = sessionISO(s);
-    if(iso && dias.includes(iso)) entrenados.add(iso);
+    if(iso && ventana.has(iso)) entrenados.add(iso);
   });
 
   const total = entrenados.size;
@@ -1495,18 +1678,18 @@ function analyzeLastTwoWeeks(){
   // Racha actual de días seguidos entrenando (hasta hoy o ayer)
   let seguidos = 0;
   for(let i=0; i<14; i++){
-    if(entrenados.has(daysAgoISO(i))) seguidos++;
+    if(entrenados.has(hace(i))) seguidos++;
     else break;
   }
   // Días consecutivos SIN entrenar
   let sinEntrenar = 0;
   for(let i=0; i<14; i++){
-    if(!entrenados.has(daysAgoISO(i))) sinEntrenar++;
+    if(!entrenados.has(hace(i))) sinEntrenar++;
     else break;
   }
   // Entrenamientos en los últimos 7 días
   let ultimos7 = 0;
-  for(let i=0; i<7; i++) if(entrenados.has(daysAgoISO(i))) ultimos7++;
+  for(let i=0; i<7; i++) if(entrenados.has(hace(i))) ultimos7++;
 
   // ¿Descansos bien repartidos? Nunca más de 3 días seguidos entrenando en las 2 semanas
   let maxSeguidos = 0, run = 0;
@@ -1743,9 +1926,14 @@ const SCREENS = {
   editExercise: ()=>renderEditExercise(), legend: ()=>renderLegend(),
   planning: ()=>renderPlanning(), supplements: ()=>renderSupplements()
 };
+let _rendering = false;
 function render(){
   const app = document.getElementById("app");
   if(!app || !DB) return;
+  // Evita reentradas: si una acción dentro de un render vuelve a llamar a render(),
+  // el DOM se quedaría a medio construir.
+  if(_rendering) return;
+  _rendering = true;
   try{
     const fn = SCREENS[VIEW.screen] || SCREENS.home;
     const view = fn();
@@ -1762,6 +1950,8 @@ function render(){
     btn.onclick = ()=>{ VIEW={screen:"home"}; render(); };
     box.appendChild(btn);
     app.appendChild(box);
+  }finally{
+    _rendering = false;
   }
   renderRestTimer();
 }
@@ -1872,7 +2062,7 @@ function renderHome(){
 
   const foot = el("div","homefoot");
   const histBtn = el("div","pill-btn","Historial");
-  histBtn.onclick = ()=>{ VIEW={screen:"history"}; render(); };
+  histBtn.onclick = ()=>{ HISTORY_LIMIT = HISTORY_PAGE; VIEW={screen:"history"}; render(); };
   const editBtn = el("div","pill-btn","Editar rutina");
   editBtn.onclick = ()=>{ VIEW={screen:"editor"}; render(); };
   const legendBtn = el("div","pill-btn","Leyenda");
@@ -2025,16 +2215,22 @@ function renderExercise(){
     const wField = el("div");
     wField.appendChild(el("div","field-label","Peso (kg)"));
     const wInput = el("input","set-input");
-    wInput.type="number"; wInput.inputMode="decimal"; wInput.value=s.peso;
-    wInput.oninput = (e)=>{ s.peso = e.target.value; };
+    // type=text + inputmode: con type=number, escribir "82,5" (coma del teclado español)
+    // devuelve cadena vacía y se perdía el peso. Aquí lo aceptamos y lo normalizamos.
+    wInput.type="text"; wInput.inputMode="decimal"; wInput.autocomplete="off";
+    wInput.value=s.peso;
+    wInput.oninput = (e)=>{ s.peso = cleanNumberInput(e.target.value, true); };
+    wInput.onblur = (e)=>{ e.target.value = s.peso; };
     wField.appendChild(wInput);
     row.appendChild(wField);
 
     const rField = el("div");
     rField.appendChild(el("div","field-label", def.unidad==="segundos" ? "Segundos" : def.unidad==="m" ? "Metros" : "Reps"));
     const rInput = el("input","set-input");
-    rInput.type="number"; rInput.inputMode="numeric"; rInput.value=s.reps;
-    rInput.oninput = (e)=>{ s.reps = e.target.value; };
+    rInput.type="text"; rInput.inputMode="numeric"; rInput.autocomplete="off";
+    rInput.value=s.reps;
+    rInput.oninput = (e)=>{ s.reps = cleanNumberInput(e.target.value, false); };
+    rInput.onblur = (e)=>{ e.target.value = s.reps; };
     rField.appendChild(rInput);
     row.appendChild(rField);
 
@@ -2078,19 +2274,55 @@ function renderExercise(){
   sec2.appendChild(el("div","section-label","Últimos entrenamientos"));
   const last = getLastSessionsFor(def.id, ACTIVE_SESSION.id, 2);
   if(last.length===0){
-    sec2.appendChild(el("div","empty-note","Todavía no hay historial para este ejercicio."));
+    sec2.appendChild(el("div","empty-note","Todavía no hay historial para este ejercicio. Lo que registres hoy aparecerá aquí la próxima vez."));
   } else {
-    last.forEach(h=>{
-      const block = el("div","history-block");
-      block.appendChild(el("div","history-date", h.fecha));
+    last.forEach((h,idx)=>{
+      const block = el("div","prev-card");
+      const head = el("div","prev-head");
+      const fechaTxt = el("div","prev-date", h.fecha);
+      head.appendChild(fechaTxt);
+      const tag = el("div","prev-tag", idx===0 ? "Última vez" : "Anterior");
+      if(idx>0) tag.classList.add("muted");
+      head.appendChild(tag);
+      block.appendChild(head);
+
+      const grid = el("div","prev-sets");
       h.series.forEach((s,i)=>{
-        const row = el("div","history-set");
-        row.appendChild(el("span",null,"Serie "+(i+1)));
-        row.appendChild(el("span","num", `${s.peso} × ${s.reps}`));
-        block.appendChild(row);
+        const p = setParts(def, s);
+        const cell = el("div","prev-set");
+        cell.appendChild(el("div","prev-set-n","S"+(i+1)));
+        const val = el("div","prev-set-val");
+        val.appendChild(el("span","prev-reps", p.repTxt));
+        if(p.cargaTxt){
+          val.appendChild(el("span","prev-x","×"));
+          val.appendChild(el("span","prev-peso", p.cargaTxt));
+        }
+        cell.appendChild(val);
+        grid.appendChild(cell);
       });
+      block.appendChild(grid);
+
+      const vol = h.series.reduce((a,s)=>a+volumenSerie(s),0);
+      if(vol>0){
+        block.appendChild(el("div","prev-foot","Volumen total: <b>"+Math.round(vol)+" kg</b>"));
+      }
       sec2.appendChild(block);
     });
+
+    // Comparativa rápida entre las dos últimas sesiones
+    if(last.length===2){
+      const v0 = last[0].series.reduce((a,s)=>a+volumenSerie(s),0);
+      const v1 = last[1].series.reduce((a,s)=>a+volumenSerie(s),0);
+      if(v0>0 && v1>0){
+        const diff = v0 - v1;
+        const pct = Math.round(Math.abs(diff)/v1*100);
+        let txt, cls;
+        if(diff>0){ txt = "↗ Subiste un "+pct+"% de volumen respecto a la sesión anterior"; cls="up"; }
+        else if(diff<0){ txt = "↘ Bajaste un "+pct+"% de volumen respecto a la sesión anterior"; cls="down"; }
+        else { txt = "→ Mismo volumen que la sesión anterior"; cls="same"; }
+        sec2.appendChild(el("div","prev-trend "+cls, txt));
+      }
+    }
   }
   wrap.appendChild(sec2);
 
@@ -2719,6 +2951,21 @@ function renderSupplements(){
 }
 
 /* ---------- HISTORY ---------- */
+const HISTORY_PAGE = 30;
+let HISTORY_LIMIT = HISTORY_PAGE;
+let _histTotals = {firma:null, series:0, vol:0};
+
+function sessionStats(s){
+  let series=0, vol=0, ejercicios=0;
+  (s.ejercicios||[]).forEach(e=>{
+    const hechas = (e.series||[]).filter(x=>x.done);
+    if(hechas.length) ejercicios++;
+    series += hechas.length;
+    hechas.forEach(x=> vol += volumenSerie(x));
+  });
+  return {series, vol:Math.round(vol), ejercicios};
+}
+
 function renderHistory(){
   const wrap = el("div");
   const top = el("div","topbar");
@@ -2727,23 +2974,84 @@ function renderHistory(){
   top.appendChild(back);
   wrap.appendChild(top);
   wrap.appendChild(el("h1","title","Historial"));
-  wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
 
-  if(DB.sessions.length===0){
+  if(!DB.sessions.length){
+    wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
     wrap.appendChild(el("div","empty-note","Todavía no has completado ningún entrenamiento."));
     return wrap;
   }
-  [...DB.sessions].reverse().forEach(s=>{
-    const card = el("div","hist-day");
-    const topRow = el("div","hist-day-top");
-    topRow.appendChild(el("div","hist-day-date", s.fecha));
-    topRow.appendChild(el("div","hist-day-routine", s.routineName));
-    card.appendChild(topRow);
-    const doneExs = s.ejercicios.filter(e=>e.series.some(x=>x.done));
-    card.appendChild(el("div","hist-ex", doneExs.map(e=>DB.exercises[e.exId]?.nombre||e.exId).join(" · ")));
-    card.onclick = ()=>{ VIEW={screen:"historyDay", sessionId:s.id}; render(); };
-    wrap.appendChild(card);
+
+  // Resumen global (memorizado: recalcularlo en cada render es caro con muchas sesiones)
+  const totalSes = DB.sessions.length;
+  const firma = totalSes + ":" + (totalSes ? DB.sessions[totalSes-1].id : "");
+  if(_histTotals.firma !== firma){
+    let ts=0, tv=0;
+    DB.sessions.forEach(s=>{ const st=sessionStats(s); ts+=st.series; tv+=st.vol; });
+    _histTotals = {firma, series:ts, vol:tv};
+  }
+  const totalSeries = _histTotals.series, totalVol = _histTotals.vol;
+  const resumen = el("div","hist-summary");
+  [["Entrenamientos", totalSes], ["Series", totalSeries], ["Volumen", Math.round(totalVol/1000)+" t"]]
+    .forEach(([k,v])=>{
+      const b = el("div","hist-sum-box");
+      b.appendChild(el("div","hist-sum-val", String(v)));
+      b.appendChild(el("div","hist-sum-key", k));
+      resumen.appendChild(b);
+    });
+  wrap.appendChild(resumen);
+
+  // Agrupado por mes. Solo pintamos un bloque cada vez: con muchos entrenamientos
+  // acumulados, dibujar cientos de tarjetas de golpe ralentiza la apertura.
+  const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  const visibles = HISTORY_LIMIT;
+  const porMes = new Map();
+  [...DB.sessions].reverse().slice(0, visibles).forEach(s=>{
+    const iso = sessionISO(s);
+    let clave = "Sin fecha";
+    if(iso){
+      const [y,m] = iso.split("-");
+      clave = MESES[parseInt(m,10)-1]+" "+y;
+    }
+    if(!porMes.has(clave)) porMes.set(clave, []);
+    porMes.get(clave).push(s);
   });
+
+  porMes.forEach((sesiones, mes)=>{
+    wrap.appendChild(el("div","hist-month", mes));
+    sesiones.forEach(s=>{
+      const st = sessionStats(s);
+      const card = el("div","hist-card");
+      const head = el("div","hist-card-head");
+      const izq = el("div");
+      izq.appendChild(el("div","hist-card-routine", s.routineName));
+      izq.appendChild(el("div","hist-card-date", s.fecha));
+      head.appendChild(izq);
+      head.appendChild(el("div","hist-card-arrow","›"));
+      card.appendChild(head);
+
+      const chips = el("div","hist-chips");
+      chips.appendChild(el("div","hist-chip", st.ejercicios+" ejercicios"));
+      chips.appendChild(el("div","hist-chip", st.series+" series"));
+      if(st.vol>0) chips.appendChild(el("div","hist-chip strong", st.vol+" kg"));
+      card.appendChild(chips);
+
+      const nombres = (s.ejercicios||[])
+        .filter(e=>e.series.some(x=>x.done))
+        .map(e=> (DB.exercises[e.exId] && DB.exercises[e.exId].nombre) || "Ejercicio eliminado");
+      if(nombres.length){
+        card.appendChild(el("div","hist-card-list", nombres.join(" · ")));
+      }
+      card.onclick = ()=>{ VIEW={screen:"historyDay", sessionId:s.id}; render(); };
+      wrap.appendChild(card);
+    });
+  });
+
+  const restantes = DB.sessions.length - visibles;
+  if(restantes > 0){
+    const more = el("div","add-ex-btn","Ver "+Math.min(restantes, HISTORY_PAGE)+" entrenamientos más ("+restantes+" restantes)");
+    more.onclick = ()=>{ HISTORY_LIMIT += HISTORY_PAGE; render(); };
+    wrap.appendChild(more);
+  }
   return wrap;
 }
 
@@ -2758,19 +3066,51 @@ function renderHistoryDay(){
   wrap.appendChild(top);
   wrap.appendChild(el("div","eyebrow", s.fecha));
   wrap.appendChild(el("h1","title", s.routineName));
-  wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
+
+  const st = sessionStats(s);
+  const chips = el("div","hist-chips");
+  chips.appendChild(el("div","hist-chip", st.ejercicios+" ejercicios"));
+  chips.appendChild(el("div","hist-chip", st.series+" series"));
+  if(st.vol>0) chips.appendChild(el("div","hist-chip strong", st.vol+" kg de volumen"));
+  chips.style.margin = "12px 0 18px";
+  wrap.appendChild(chips);
 
   s.ejercicios.forEach(e=>{
-    const doneSeries = e.series.filter(x=>x.done);
+    const doneSeries = (e.series||[]).filter(x=>x.done);
     if(doneSeries.length===0) return;
-    const block = el("div","history-block");
-    block.appendChild(el("div","history-date", DB.exercises[e.exId]?.nombre || e.exId));
+    const def = DB.exercises[e.exId];
+    const block = el("div","hd-card");
+
+    const head = el("div","hd-head");
+    const nombre = el("div","hd-name", (def && def.nombre) || "Ejercicio eliminado");
+    head.appendChild(nombre);
+    if(def && def.tipoMovimiento && def.tipoMovimiento.length){
+      const b = movementBadge(def.tipoMovimiento[0]);
+      if(b) head.appendChild(b);
+    }
+    block.appendChild(head);
+
+    block.appendChild(el("div","hd-summary", seriesSummary(def, doneSeries)));
+
+    const list = el("div","hd-sets");
     doneSeries.forEach((set,i)=>{
-      const row = el("div","history-set");
-      row.appendChild(el("span",null,"Serie "+(i+1)));
-      row.appendChild(el("span","num", `${set.peso} × ${set.reps}`));
-      block.appendChild(row);
+      const p = setParts(def, set);
+      const row = el("div","hd-set");
+      row.appendChild(el("div","hd-set-n","S"+(i+1)));
+      const val = el("div","hd-set-val");
+      val.appendChild(el("span","prev-reps", p.repTxt));
+      if(p.cargaTxt){
+        val.appendChild(el("span","prev-x","×"));
+        val.appendChild(el("span","prev-peso", p.cargaTxt));
+      }
+      row.appendChild(val);
+      list.appendChild(row);
     });
+    block.appendChild(list);
+
+    if(!def){
+      block.appendChild(el("div","hd-note","Este ejercicio ya no está en tu rutina, pero tu registro se conserva."));
+    }
     wrap.appendChild(block);
   });
   return wrap;
@@ -3014,7 +3354,7 @@ function showNextExerciseModal(currentDef){
       closeModal(overlay);
       const nextCat = categoryOf(nextDef);
       let secs;
-      if(nextCat==="POT" || nextCat==="FUE") secs = 180;
+      if(nextCat==="POT" || nextCat==="FUE") secs = 120;
       else if(["COR","EST","MOV"].includes(nextCat)) secs = 60;
       else if(["HIP","COND"].includes(nextCat)) secs = (bodyPartOf(currentDef)===bodyPartOf(nextDef)) ? 120 : 90;
       else secs = REST_DICT[nextCat] || 90;
