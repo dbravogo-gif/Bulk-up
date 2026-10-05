@@ -209,6 +209,22 @@ body.resting #app{padding-bottom:150px;}
 .backup-toggle{font-size:12.5px; color:var(--accent); font-weight:600; padding:6px 0;}
 
 .brand{display:flex; align-items:center; gap:12px;}
+
+/* MODO PUBALGIA */
+.pub-switch{display:flex; align-items:center; gap:12px; background:var(--surface); border:1.5px solid var(--line);
+  border-radius:14px; padding:13px 15px; margin-bottom:12px;}
+.pub-switch.on{border-color:#0F7C80; background:#E8F5F5;}
+.pub-switch-txt{flex:1;}
+.pub-switch-title{font-size:15px; font-weight:700;}
+.pub-switch-sub{font-size:12px; color:var(--muted); margin-top:2px;}
+.pub-switch.on .pub-switch-sub{color:#0F7C80; font-weight:600;}
+.pub-toggle{width:46px; height:27px; border-radius:14px; background:#C9D1DC; position:relative; flex-shrink:0; transition:background .15s;}
+.pub-toggle.on{background:#0F7C80;}
+.pub-toggle-dot{position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.25); transition:left .15s;}
+.pub-toggle.on .pub-toggle-dot{left:22px;}
+.pub-note{background:#E8F5F5; border:1px solid #9FD0D2; color:#0B5558; border-radius:11px;
+  padding:10px 13px; font-size:12.5px; line-height:1.5; margin-bottom:14px;}
 .brand-logo{width:52px; height:52px; border-radius:13px; flex-shrink:0; object-fit:cover;}
 
 /* ÚLTIMOS ENTRENAMIENTOS (ficha de ejercicio) */
@@ -267,7 +283,20 @@ body.resting #app{padding-bottom:150px;}
 .hd-set-n{font-size:10.5px; font-weight:700; color:var(--muted); min-width:20px;}
 .hd-set-val{display:flex; align-items:baseline; gap:5px;}
 .hd-note{font-size:11.5px; color:var(--muted); font-style:italic; margin-top:9px;}
-.day-letter{font-size:13px; font-weight:700; color:var(--text);}
+.day-letter{font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase;}
+.day-num{font-size:15px; font-weight:700; color:var(--text); margin-top:-3px;}
+.day-col.today{border-color:var(--accent); background:rgba(31,58,95,.05);}
+.day-col.today .day-num{color:var(--accent);}
+.week-nav{display:flex; align-items:center; gap:10px; margin:14px 0 4px;}
+.week-nav-btn{width:38px; height:38px; border-radius:11px; background:var(--surface);
+  border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+  font-size:20px; color:var(--accent); flex-shrink:0;}
+.week-nav-btn:active{border-color:var(--accent); background:var(--surface-2);}
+.week-nav-label{flex:1; text-align:center;}
+.week-nav-range{font-size:14.5px; font-weight:700;}
+.week-nav-rel{font-size:11.5px; color:var(--muted); margin-top:1px;}
+.week-today{text-align:center; font-size:12.5px; color:var(--accent); font-weight:600;
+  padding:7px; margin-bottom:6px;}
 .day-meter{width:9px; height:52px; border-radius:5px; background:var(--surface-2);
   overflow:hidden; display:flex; flex-direction:column-reverse;}
 .day-meter-fill{width:100%; border-radius:5px; transition:height .2s;}
@@ -351,6 +380,7 @@ const MOVEMENT_TYPES = {
   CAR:  {label:"Carry",                   color:"#2F5D9F", desc:"Transportar carga manteniendo una postura sólida: caminar de forma natural, tronco estable, sin balancearse, respiración controlada."},
   COND: {label:"Condicionamiento",        color:"#7A5230", desc:"Ritmo alto y cierto grado de fatiga buscado, con recuperación suficiente entre esfuerzos. No es hipertrofia ni potencia pura."},
   COOR: {label:"Coordinación / Locomoción",color:"#2F5D9F", desc:"Controlado al inicio; después puede aumentar la velocidad manteniendo la coordinación. Prioridad: calidad del patrón, no agotamiento."},
+  REH:  {label:"Rehabilitación",          color:"#0F7C80", desc:"Carga progresiva y controlada de la zona en recuperación. Esfuerzo moderado (5-7/10). Regla de dolor: 0-2/10 aceptable; 3/10 reduce rango o carga; más de 3/10, dolor creciente o punzante: para ese ejercicio."},
   ADU:  {label:"Aductores",               color:"#8A4B6E", desc:"Trabajo específico de aductores, generalmente isométrico o de baja carga. Progresión muy gradual: debe sentirse como trabajo muscular, nunca como dolor en la zona."}
 };
 function movementBadge(code){
@@ -930,7 +960,7 @@ LITE_CATALOG_RAW.forEach(([nombre,grupoMuscular,subgrupo,tipoEntrenamiento,categ
    Cada ejercicio incluye tipoMovimiento (códigos de MOVEMENT_TYPES, puede ser compuesto
    p.ej. ["FUE","UNI"]) y objetivo (frase corta de qué busca ese ejercicio). */
 function defaultDescansoPorTipo(code){
-  const map = {FUE:120, POT:120, HIP:90, COND:90, COR:60, EST:60, MOV:60, UNI:90, CAR:90, COOR:60};
+  const map = {FUE:120, POT:120, HIP:90, COND:90, COR:60, EST:60, MOV:60, REH:60, UNI:90, CAR:90, COOR:60};
   return map[code] || 90;
 }
 const RUTINA2_RAW = [
@@ -1317,6 +1347,130 @@ const DIA4_DETAIL = {
 };
 Object.keys(DIA4_DETAIL).forEach(id=>{ Object.assign(DEFAULT_EXERCISES[id], DIA4_DETAIL[id]); });
 
+/* ================== RUTINA DE RECUPERACIÓN — PUBALGIA ==================
+   Segunda rutina paralela. Reutiliza los ejercicios comunes (historial compartido)
+   y añade los específicos de recuperación. Las diferencias de volumen de un ejercicio
+   compartido van en "overrides" de cada día, no en la ficha base. */
+const PUB_PROG_PIERNA = ["Fase de dolor: carga ~70-80 % de la habitual y RIR 3-4.","Sube carga solo cuando el dolor esté claramente bajando (etapa 2)."];
+function copiaFicha(id){
+  const b = DEFAULT_EXERCISES[id] || {};
+  return {ejecucion:[...(b.ejecucion||[])], errores:[...(b.errores||[])], consejos:[...(b.consejos||[])]};
+}
+const PUB_RAW = [
+  // id, nombre, series, repMin, repMax, unidad, repNota, tipos, objetivo, grupo, rirMin, rirMax, ficha
+  ["e3_box_squat","Box squat controlado",3,8,8,"reps","",["FUE"],"Fuerza de piernas + control",["Piernas"],3,4,
+    {progresion:PUB_PROG_PIERNA}],
+  ["e3_landmine_press_uni","Landmine press unilateral",3,8,8,"reps","por lado",["HIP","UNI"],"Fuerza + estabilidad del tronco",["Hombro","Core"],2,3,{
+    ejecucion:["Empuja el extremo de la barra hacia arriba y ligeramente hacia delante con un solo brazo.","Mantén abdomen y pelvis estables."],
+    errores:["Rotar excesivamente el tronco.","Arquear la espalda."],
+    consejos:["El brazo empuja; el tronco resiste."],
+    progresion:["Más carga.","Split stance.","Posición más exigente."]}],
+  ["e3_landmine_press_split","Landmine press unilateral en split stance",3,8,8,"reps","por lado",["HIP","EST"],"Estabilidad + fuerza",["Hombro","Core"],2,3,{
+    ejecucion:["En posición de split stance, empuja el extremo de la barra hacia arriba y ligeramente hacia delante con un solo brazo.","Mantén abdomen y pelvis estables."],
+    errores:["Rotar excesivamente el tronco.","Arquear la espalda."],
+    consejos:["El brazo empuja; el tronco resiste."],
+    progresion:["Más carga.","Posición más exigente."]}],
+  ["e3_step_up_bajo","Step-up bajo",3,8,8,"reps","por lado",["FUE","UNI"],"Fuerza unilateral + control de cadera",["Piernas"],3,4,
+    Object.assign(copiaFicha("e2_step_up_cajon"), {progresion:PUB_PROG_PIERNA, observaciones:["Variante con cajón bajo para la fase de recuperación."]})],
+  ["e3_hip_flexor_hk","Half-kneeling hip flexor stretch",2,30,40,"segundos","por lado",["MOV"],"Movilidad de psoas/flexor",[],null,null,{
+    ejecucion:["Una rodilla en el suelo y la otra pierna delante.","Contrae ligeramente el glúteo de la pierna atrasada.","Lleva la pelvis suavemente hacia delante."],
+    errores:["Arquear la zona lumbar para aumentar artificialmente el estiramiento."],
+    consejos:["Piensa en \"meter el culo debajo del cuerpo\".","Tensión suave-moderada, nunca dolor."],
+    progresion:["Aumentar ligeramente el rango.","Añadir elevación del brazo del lado atrasado."]}],
+  ["e3_adductor_rockback","Adductor rock-back",2,8,10,"reps","por lado",["MOV"],"Movilidad de aductores",["Aductores"],null,null,{
+    ejecucion:["Posición cuadrúpeda.","Extiende una pierna lateralmente.","Desplaza lentamente la cadera hacia atrás."],
+    errores:["Forzar la apertura.","Rotar la pelvis."],
+    consejos:["Busca movimiento fluido, no máximo rango."],
+    progresion:["Aumentar progresivamente el rango.","Cossack parcial.","Cossack completo."]}],
+  ["e3_bici_suave","Bicicleta suave",1,5,8,"min","",["COND"],"Calentamiento",[],null,null,{}],
+  ["e3_aduccion_iso_pelota","Aducción isométrica con pelota",3,30,40,"segundos","",["REH","ADU"],"Carga progresiva del aductor",["Aductores"],null,null,{
+    ejecucion:["Tumbado boca arriba, rodillas flexionadas y pelota/cojín entre las rodillas.","Presiona progresivamente hacia dentro sin mover las piernas."],
+    errores:["Apretar bruscamente al máximo.","Levantar la pelvis.","Contener la respiración."],
+    consejos:["Empieza alrededor del 50 % y aumenta progresivamente.","Esfuerzo aproximado 5-7/10."],
+    progresion:["Más tiempo.","Más intensidad.","Aducción dinámica.","Copenhagen."]}],
+  ["e3_aduccion_banda","Aducción de cadera con banda",3,12,15,"reps","por lado",["REH","ADU"],"Fuerza del aductor",["Aductores"],3,4,{
+    ejecucion:["Banda fijada lateralmente y tobillo sujeto a ella.","Lleva la pierna hacia la línea media manteniendo la pelvis estable."],
+    errores:["Rotar la pelvis.","Inclinar el tronco.","Utilizar impulso."],
+    consejos:["Movimiento lento y controlado."],
+    progresion:["Aumentar resistencia.","Cable.","Variantes más exigentes."]}],
+  ["e3_puente_gluteo_uni","Puente de glúteo unilateral",3,8,10,"reps","por lado",["HIP","UNI"],"Glúteo + estabilidad pélvica",["Glúteos"],3,3,{
+    ejecucion:["Una pierna apoyada y la otra elevada.","Eleva la pelvis manteniendo ambas caderas alineadas."],
+    errores:["Rotar la pelvis.","Hiperextender la espalda."],
+    consejos:["Piensa en empujar el suelo con el talón."],
+    progresion:["Bilateral.","Unilateral.","Añadir carga."]}],
+  ["e3_adductor_stretch","Adductor stretch suave",2,20,30,"segundos","por lado",["MOV"],"Movilidad de aductores",["Aductores"],null,null,{
+    ejecucion:["Posición amplia y cómoda.","Desplaza el peso hacia un lado manteniendo la otra pierna extendida."],
+    errores:["Rebotes.","Buscar máximo rango.","Provocar dolor."],
+    consejos:["20-30 s y sal del estiramiento antes de que aparezca dolor."],
+    progresion:["Mayor rango solamente cuando sea completamente tolerado."]}],
+  ["e3_prone_pressup","Prone press-up suave",2,20,30,"segundos","",["MOV"],"Movilidad de cadena anterior",[],null,null,{
+    ejecucion:["Tumbado boca abajo, manos cerca del pecho.","Eleva suavemente el tronco mientras la pelvis permanece apoyada."],
+    errores:["Forzar la extensión.","Producir dolor abdominal/inguinal."],
+    consejos:["Amplitud pequeña al principio."],
+    progresion:["Aumentar gradualmente el rango si resulta cómodo."]}],
+  ["e3_goblet_caja","Goblet squat a caja",3,10,10,"reps","",["FUE"],"Fuerza de piernas + control",["Piernas","Core"],3,4,
+    Object.assign(copiaFicha("e2_goblet_squat"), {progresion:PUB_PROG_PIERNA, observaciones:["Bajando hasta tocar la caja para controlar la profundidad."]})],
+  ["e3_pmr_bilateral","Peso muerto rumano bilateral",3,8,10,"reps","",["FUE"],"Cadena posterior",["Isquiotibiales","Glúteos"],3,4,
+    Object.assign(copiaFicha("LA02"), {progresion:PUB_PROG_PIERNA})],
+  ["e3_cossack_parcial","Cossack squat parcial asistido",2,6,6,"reps","por lado",["MOV","UNI"],"Movilidad + tolerancia lateral",["Aductores","Piernas"],3,4,{
+    ejecucion:["Piernas separadas.","Desplaza el peso hacia un lado mientras flexionas esa rodilla y mantienes la otra relativamente extendida.","Utiliza un soporte."],
+    errores:["Bajar demasiado.","Colapsar la rodilla.","Perder el control de la pelvis."],
+    consejos:["Inicialmente importa más el control que la profundidad."],
+    progresion:["Más profundidad.","Menos asistencia.","Carga ligera."],
+    observaciones:["Parcial y asistido al principio: no busques todavía una apertura grande del aductor."]}],
+  ["e3_marcha_rodilla_alta","Marcha atlética con rodilla alta",3,20,20,"m","",["COOR"],"Coordinación + control de cadera",[],null,null,{
+    ejecucion:["Marcha elevando alternativamente las rodillas.","Mantén tronco y pelvis estables."],
+    errores:["Convertirla en carrera.","Lanzar la rodilla violentamente."],
+    consejos:["Coordinación y control antes que velocidad."],
+    progresion:["Marcha.","Skipping suave.","Carrera técnica.","Carrera."]}],
+  ["e3_step_down","Step-down controlado",3,8,8,"reps","por lado",["FUE","UNI"],"Control excéntrico de pierna",["Piernas"],3,3,{
+    ejecucion:["Desde un cajón bajo, baja lentamente hasta acercar el talón libre al suelo."],
+    errores:["Caída rápida.","Rodilla hacia dentro.","Pelvis descontrolada."],
+    consejos:["2-3 s de bajada."],
+    progresion:["Aumentar altura.","Añadir carga."]}],
+  ["e3_hip_hinge_uni","Hip hinge unilateral asistido",2,8,8,"reps","por lado",["EST","UNI"],"Control de cadera",["Isquiotibiales","Glúteos"],3,4,{
+    ejecucion:["Sujeto a un soporte, lleva una pierna atrás mientras inclinas el tronco desde la cadera."],
+    errores:["Rotar la pelvis.","Buscar profundidad sacrificando el control."],
+    consejos:["Piensa en \"llevar la cadera hacia atrás\"."],
+    progresion:["Más independencia.","Eliminar apoyo.","Añadir carga."]}]
+];
+PUB_RAW.forEach(([id,nombre,series,repMin,repMax,unidad,repNota,tipos,objetivo,grupo,rirMin,rirMax,ficha])=>{
+  DEFAULT_EXERCISES[id] = Object.assign({
+    id, nombre, grupo, series, repMin, repMax, unidad, repNota, rirMin, rirMax,
+    descansoSeg: defaultDescansoPorTipo(tipos[0]), tipo:"", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[],
+    tipoMovimiento:tipos, objetivo
+  }, ficha);
+});
+
+const PUB_PIERNA = {rirMin:3, rirMax:4};
+const PUBALGIA_ROUTINES = {
+  pub1: {id:"pub1", set:"pubalgia", nombre:"Día 1", tags:"Fuerza + Potencia controlada",
+    nota:"Carga de pierna ~70-80 % de la habitual, RIR 3-4. Sin potencia explosiva todavía.",
+    ejercicios:["e3_box_squat","e3_landmine_press_uni","e2_prensa_piernas","e2_dominadas_asistidas","e2_press_pecho_maquina","e2_remo_maquina","e3_step_up_bajo","e2_pallof_press","e2_dead_bug","e3_hip_flexor_hk","e3_adductor_rockback","e2_thread_the_needle"],
+    overrides:{ e2_prensa_piernas: PUB_PIERNA }},
+  pub2: {id:"pub2", set:"pubalgia", nombre:"Día 2", tags:"Movilidad + Rehabilitación + Estabilidad",
+    nota:"Día específico de pubalgia. Estimular + recuperar, sin buscar fatiga máxima.",
+    ejercicios:["e3_bici_suave","e2_movilidad_tobillo","e2_90_90_hip_switches","e3_aduccion_iso_pelota","e3_aduccion_banda","e2_copenhagen_plank_corto","e2_single_leg_reach","e2_bird_dog","e2_side_plank","e3_puente_gluteo_uni","e3_hip_flexor_hk","e3_adductor_stretch","e3_prone_pressup"],
+    overrides:{
+      e2_copenhagen_plank_corto:{repMin:15, repMax:25, tipoMovimiento:["REH","ADU"], objetivo:"Fuerza aductora + core"},
+      e2_single_leg_reach:{objetivo:"Control dinámico de cadera"} }},
+  pub3: {id:"pub3", set:"pubalgia", nombre:"Día 3", tags:"Fuerza funcional + Cadena posterior",
+    nota:"El Cossack es parcial y asistido: no busques todavía una apertura grande del aductor.",
+    ejercicios:["e3_goblet_caja","e2_flexiones_inclinadas","e2_remo_trx","e2_hip_thrust","e2_face_pull","e3_pmr_bilateral","e2_step_up_cajon","e2_farmer_carry","e2_plank_shoulder_taps","e3_cossack_parcial","e3_hip_flexor_hk","e2_worlds_greatest_stretch"],
+    overrides:{
+      e2_step_up_cajon: PUB_PIERNA,
+      e3_hip_flexor_hk:{repMin:30, repMax:30} }},
+  pub4: {id:"pub4", set:"pubalgia", nombre:"Día 4", tags:"Atlético + Coordinación + Rehabilitación",
+    nota:"Sustituye temporalmente al Día 4 explosivo. Segundo estímulo de aductor (isométrico).",
+    ejercicios:["e3_marcha_rodilla_alta","e3_landmine_press_split","e3_step_down","e2_press_unilateral_mancuerna","e3_hip_hinge_uni","e2_suitcase_carry","e2_sled_push","e2_bear_crawl_d4","e2_pallof_press","e3_aduccion_iso_pelota","e2_90_90_rotacion","e3_hip_flexor_hk","e3_adductor_rockback"],
+    overrides:{
+      e2_sled_push:{repMin:45, repMax:60},
+      e2_pallof_press:{repMin:8, repMax:10, tipoMovimiento:["COR","EST"], objetivo:"Anti-rotación + estabilidad"},
+      e3_aduccion_iso_pelota:{series:2, repMin:30, repMax:30, objetivo:"Segundo estímulo aductor"},
+      e3_adductor_rockback:{repMin:8, repMax:8} }}
+};
+
 const DEFAULT_ROUTINES = {
   dia1: {id:"dia1", nombre:"Día 1", tags:"Fuerza + Potencia",
       ejercicios:["e2_salto_al_cajon","e2_landmine_push_press_rot","e2_prensa_piernas","e2_dominadas_asistidas","e2_press_pecho_maquina","e2_remo_maquina","e2_zancada_atras_elevacion_rodilla","e2_pallof_press","e2_dead_bug","e2_thread_the_needle"]},
@@ -1327,14 +1481,16 @@ const DEFAULT_ROUTINES = {
   dia4: {id:"dia4", nombre:"Día 4", tags:"Atlético + Potencia + Coordinación",
       ejercicios:["e2_skater_jumps","e2_lanzamiento_rotacional_balon","e2_salto_horizontal","e2_split_squat","e2_press_unilateral_mancuerna","e2_zancada_lateral","e2_suitcase_carry","e2_sled_push","e2_bear_crawl_d4","e2_pallof_press_zancada","e2_worlds_greatest_stretch","e2_90_90_rotacion"]}
 };
+["dia1","dia2","dia3","dia4"].forEach(k=> DEFAULT_ROUTINES[k].set = "normal");
+Object.assign(DEFAULT_ROUTINES, PUBALGIA_ROUTINES);
 
 /* ---------- Cronómetro inteligente de descanso: category / body_part ---------- */
 // Descansos entre series (s). POT/FUE a 120: el SNC se recupera lo suficiente para
 // mantener explosividad y técnica, sin enfriarse ni alargar la sesión.
-const REST_DICT = {POT:120, FUE:120, HIP:90, COND:90, COR:60, EST:60, MOV:60};
+const REST_DICT = {POT:120, FUE:120, HIP:90, COND:90, COR:60, EST:60, MOV:60, REH:60};
 function categoryOf(ex){
   if(ex.category) return ex.category;
-  const order = ["POT","FUE","HIP","COND","COR","EST","MOV"];
+  const order = ["POT","FUE","HIP","COND","REH","COR","EST","MOV"];
   const codes = ex.tipoMovimiento || [];
   return order.find(c=>codes.includes(c)) || "HIP";
 }
@@ -1373,6 +1529,40 @@ function emptyWeekPlan(){
   return wp;
 }
 
+/* El plan es un calendario real: DB.plan["2026-09-08"] = [{instanceId, activityId}].
+   Se navega por semanas y se conserva el histórico. */
+function startOfWeek(date){
+  const d = new Date(date);
+  d.setHours(12,0,0,0);                 // mediodía: evita saltos por horario de verano
+  const dow = (d.getDay() + 6) % 7;     // 0 = lunes
+  d.setDate(d.getDate() - dow);
+  return d;
+}
+function addDays(date, n){
+  const d = new Date(date);
+  d.setHours(12,0,0,0);
+  d.setDate(d.getDate() + n);
+  return d;
+}
+function weekDates(offset){
+  const base = addDays(startOfWeek(new Date()), offset*7);
+  const out = [];
+  for(let i=0;i<7;i++) out.push(addDays(base, i));
+  return out;
+}
+function planKey(date){ return isoDateStr(date); }
+function planFor(key){ return (DB.plan && DB.plan[key]) || []; }
+function prevKey(key){
+  const [y,m,d] = key.split("-").map(Number);
+  return planKey(addDays(new Date(y, m-1, d), -1));
+}
+function formatDayRange(dates){
+  const MESES_C = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const a = dates[0], b = dates[6];
+  const ma = MESES_C[a.getMonth()], mb = MESES_C[b.getMonth()];
+  return a.getDate()+" "+ma+" – "+b.getDate()+" "+mb+" "+b.getFullYear();
+}
+
 /* ---------- Suplementación: datos estáticos iniciales ---------- */
 const DEFAULT_SUPPLEMENTS = [
   {id:"sup_1", nombre:"Vitamina D3+K2", dosis:"1 cápsula", momento:"Mañana", tipoDia:"entreno", notas:"Consumir siempre con algo de grasa (aceite, aguacate, yema) para asegurar su absorción."},
@@ -1387,7 +1577,7 @@ const DEFAULT_SUPPLEMENTS = [
 // La clave mantiene el nombre antiguo a propósito: cambiarla haría que la app no
 // encontrara los datos ya guardados en dispositivos que venían de la versión anterior.
 const STORAGE_KEY = "gymlog_db";
-const SCHEMA_VERSION = 7; // subir este número cuando se actualice el catálogo/rutina por defecto
+const SCHEMA_VERSION = 9; // subir este número cuando se actualice el catálogo/rutina por defecto
 
 /* ---------- Capa de almacenamiento ----------
    window.storage solo existe dentro del entorno de artifacts de Claude. Si la app se abre
@@ -1448,9 +1638,10 @@ function freshDB(){
   return {
     routines:JSON.parse(JSON.stringify(DEFAULT_ROUTINES)), exercises, sessions:[], draftSession:null,
     schemaVersion:SCHEMA_VERSION,
-    activities:JSON.parse(JSON.stringify(DEFAULT_ACTIVITIES)), weekPlan:emptyWeekPlan(),
+    activities:JSON.parse(JSON.stringify(DEFAULT_ACTIVITIES)), weekPlan:emptyWeekPlan(), plan:{},
     planRules:JSON.parse(JSON.stringify(DEFAULT_PLAN_RULES)),
-    supplements:JSON.parse(JSON.stringify(DEFAULT_SUPPLEMENTS))
+    supplements:JSON.parse(JSON.stringify(DEFAULT_SUPPLEMENTS)),
+    settings:{pubalgia:false, pubalgiaSince:null}
   };
 }
 
@@ -1468,6 +1659,7 @@ function reconcileDB(db){
     });
   }
   if(!db.routines || typeof db.routines !== "object") db.routines = base.routines;
+  if(!db.settings || typeof db.settings !== "object") db.settings = {pubalgia:false, pubalgiaSince:null};
   if(!Array.isArray(db.sessions)) db.sessions = [];
   if(db.draftSession === undefined) db.draftSession = null;
   if(!Array.isArray(db.activities) || db.activities.length===0) db.activities = base.activities;
@@ -1478,6 +1670,25 @@ function reconcileDB(db){
   // El plan semanal se preserva siempre; solo se completan los días que falten.
   if(!db.weekPlan || typeof db.weekPlan !== "object") db.weekPlan = emptyWeekPlan();
   else WEEK_DAYS.forEach(d=>{ if(!Array.isArray(db.weekPlan[d])) db.weekPlan[d] = []; });
+
+  // Calendario por fechas. Si venías de la versión de una sola semana, volcamos
+  // aquel plan sobre la semana actual para no perder lo que tuvieras puesto.
+  if(!db.plan || typeof db.plan !== "object"){
+    db.plan = {};
+    const tieneAlgo = WEEK_DAYS.some(d=> (db.weekPlan[d]||[]).length);
+    if(tieneAlgo){
+      const dates = weekDates(0);
+      WEEK_DAYS.forEach((d,i)=>{
+        const bloques = db.weekPlan[d] || [];
+        if(bloques.length) db.plan[planKey(dates[i])] = bloques.map(b=>({...b}));
+      });
+    }
+  }
+  // Limpieza suave: descartamos lo anterior a un año para que no crezca sin límite.
+  const limite = planKey(addDays(new Date(), -370));
+  Object.keys(db.plan).forEach(k=>{
+    if(k < limite || !Array.isArray(db.plan[k]) || db.plan[k].length===0) delete db.plan[k];
+  });
 
   if(!db.schemaVersion) db.schemaVersion = 1;
   if(db.schemaVersion < SCHEMA_VERSION){
@@ -1615,6 +1826,7 @@ function setParts(def, set){
   let repTxt;
   if(unidad==="segundos") repTxt = set.reps+" s";
   else if(unidad==="m")   repTxt = set.reps+" m";
+  else if(unidad==="min") repTxt = set.reps+" min";
   else                    repTxt = set.reps+" rep";
   const cargaTxt = carga===null ? null : (carga+" kg");
   return {repTxt, cargaTxt};
@@ -1629,7 +1841,7 @@ function seriesSummary(def, series){
   const reps = series.map(s=>s.reps);
   const pesos = series.map(s=>s.peso).filter(p=>p!==""&&p!=null);
   const unidad = (def && def.unidad) || "reps";
-  const uTxt = unidad==="segundos" ? "s" : unidad==="m" ? "m" : "rep";
+  const uTxt = unidad==="segundos" ? "s" : unidad==="m" ? "m" : unidad==="min" ? "min" : "rep";
   const mismasReps = reps.every(r=>r===reps[0]);
   const repPart = mismasReps ? (series.length+"×"+reps[0]+" "+uTxt) : (reps.join(", ")+" "+uTxt);
   if(!pesos.length) return repPart;
@@ -1888,11 +2100,35 @@ function showTextInputModal(title, placeholder, onSubmit){
 }
 
 /* ---------- Helpers de sesión activa ---------- */
+/* Ficha efectiva de un ejercicio dentro de una rutina concreta: la base del catálogo
+   más los ajustes de volumen/tipo que esa rutina defina (overrides). El historial
+   sigue ligado al id del ejercicio, así que se comparte entre rutinas. */
+function effDef(exId, routineId){
+  const base = DB.exercises[exId];
+  if(!base) return null;
+  const r = routineId && DB.routines[routineId];
+  const ov = r && r.overrides && r.overrides[exId];
+  if(!ov) return base;
+  const merged = Object.assign({}, base, ov);
+  if(ov.tipoMovimiento && !ov.category){
+    merged.category = categoryOf({tipoMovimiento: ov.tipoMovimiento});
+  }
+  return merged;
+}
+function isPubalgiaOn(){ return !!(DB.settings && DB.settings.pubalgia); }
+function visibleRoutines(){
+  const set = isPubalgiaOn() ? "pubalgia" : "normal";
+  return Object.values(DB.routines).filter(r=> (r.set||"normal")===set);
+}
+function curDef(exId){
+  return effDef(exId, ACTIVE_SESSION ? ACTIVE_SESSION.routineId : null);
+}
+
 function getOrCreateSessionExercise(exId){
   if(!ACTIVE_SESSION) return null;
   let se = ACTIVE_SESSION.ejercicios.find(e=>e.exId===exId);
   if(!se){
-    const def = DB.exercises[exId];
+    const def = curDef(exId);
     const seriesCount = def.series || 3;
     se = {exId, series: Array.from({length:seriesCount}, ()=>({peso:"",reps:"",done:false}))};
     ACTIVE_SESSION.ejercicios.push(se);
@@ -2045,7 +2281,35 @@ function renderHome(){
     wrap.appendChild(draftCard);
   }
 
-  Object.values(DB.routines).forEach(r=>{
+  /* Interruptor de rutina de recuperación (pubalgia) */
+  const pubOn = isPubalgiaOn();
+  const sw = el("div","pub-switch"+(pubOn?" on":""));
+  const swTxt = el("div","pub-switch-txt");
+  swTxt.appendChild(el("div","pub-switch-title","Modo pubalgia"));
+  let sub = pubOn ? "Rutina de recuperación activa" : "Usando la rutina normal";
+  if(pubOn && DB.settings.pubalgiaSince){
+    const dias = Math.max(1, Math.round((new Date(isoDateStr()) - new Date(DB.settings.pubalgiaSince))/86400000) + 1);
+    sub = "Día "+dias+" de recuperación" + (dias>=7 ? " · toca revisar la progresión" : " · revisión a los 7 días");
+  }
+  swTxt.appendChild(el("div","pub-switch-sub", sub));
+  sw.appendChild(swTxt);
+  const knob = el("div","pub-toggle"+(pubOn?" on":""));
+  knob.appendChild(el("div","pub-toggle-dot"));
+  sw.appendChild(knob);
+  sw.onclick = ()=>{
+    DB.settings.pubalgia = !pubOn;
+    if(DB.settings.pubalgia && !DB.settings.pubalgiaSince) DB.settings.pubalgiaSince = isoDateStr();
+    if(!DB.settings.pubalgia) DB.settings.pubalgiaSince = null;
+    saveDB();
+    toast(DB.settings.pubalgia ? "Rutina de recuperación activada" : "Rutina normal activada");
+    render();
+  };
+  wrap.appendChild(sw);
+  if(pubOn){
+    wrap.appendChild(el("div","pub-note","<b>Regla de dolor:</b> 0-2/10 aceptable · 3/10 reduce rango o carga · más de 3/10, creciente o punzante: para ese ejercicio. Si al día siguiente estás claramente peor, la sesión fue demasiado exigente."));
+  }
+
+  visibleRoutines().forEach(r=>{
     const card = el("div","routine-card");
     const left = el("div");
     left.appendChild(el("div","routine-name",r.nombre));
@@ -2053,7 +2317,8 @@ function renderHome(){
     card.appendChild(left);
     card.appendChild(el("div","routine-arrow","→"));
     card.onclick = ()=>{
-      ACTIVE_SESSION = {id:uid(), fecha: fullDateStr(), iso: isoDateStr(), routineId:r.id, routineName:r.nombre, ejercicios:[]};
+      const nombreSesion = r.set==="pubalgia" ? r.nombre+" · Pubalgia" : r.nombre;
+      ACTIVE_SESSION = {id:uid(), fecha: fullDateStr(), iso: isoDateStr(), routineId:r.id, routineName:nombreSesion, ejercicios:[]};
       VIEW = {screen:"workout"};
       render();
     };
@@ -2104,8 +2369,16 @@ function renderWorkout(){
   wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
 
   const routine = DB.routines[ACTIVE_SESSION.routineId];
+  if(!routine){
+    wrap.appendChild(el("div","empty-note","Esta rutina ya no existe. Pulsa \"Guardar y salir\"."));
+    return wrap;
+  }
+  if(routine.set==="pubalgia"){
+    wrap.appendChild(el("div","pub-note", (routine.nota ? routine.nota+"<br>" : "")+
+      "<b>Dolor:</b> 0-2/10 ok · 3/10 reduce rango o carga · más de 3/10 o punzante: para ese ejercicio."));
+  }
   routine.ejercicios.forEach(exId=>{
-    const def = DB.exercises[exId];
+    const def = effDef(exId, routine.id);
     if(!def) return;
     const row = el("div","ex-row");
     const done = isExerciseDoneInSession(exId);
@@ -2122,9 +2395,10 @@ function renderWorkout(){
     if(def.ficha===false){
       body.appendChild(el("div","ex-row-meta", `${def.grupoMuscular} · ${def.subgrupo} · ${def.tipoEntrenamiento}`));
     } else {
-      const rirTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${def.rirMin}-${def.rirMax}` : "";
+      const rango = (a,b)=> a===b ? String(a) : a+"-"+b;
+      const rirTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${rango(def.rirMin,def.rirMax)}` : "";
       const notaTxt = def.repNota ? " "+def.repNota : "";
-      body.appendChild(el("div","ex-row-meta", `${def.series} series · ${def.repMin}-${def.repMax} ${def.unidad||'reps'}${notaTxt}${rirTxt}`));
+      body.appendChild(el("div","ex-row-meta", `${def.series} ${def.series===1?'serie':'series'} · ${rango(def.repMin,def.repMax)} ${def.unidad||'reps'}${notaTxt}${rirTxt}`));
     }
     row.appendChild(body);
     row.onclick = ()=>{ VIEW = {screen:"exercise", exId}; render(); };
@@ -2154,7 +2428,7 @@ function renderWorkout(){
 
 /* ---------- EXERCISE DETAIL ---------- */
 function renderExercise(){
-  const def = DB.exercises[VIEW.exId];
+  const def = curDef(VIEW.exId);
   if(!def){
     const wrap = el("div");
     const back = el("div","back","‹ Volver");
@@ -2225,7 +2499,7 @@ function renderExercise(){
     row.appendChild(wField);
 
     const rField = el("div");
-    rField.appendChild(el("div","field-label", def.unidad==="segundos" ? "Segundos" : def.unidad==="m" ? "Metros" : "Reps"));
+    rField.appendChild(el("div","field-label", def.unidad==="segundos" ? "Segundos" : def.unidad==="m" ? "Metros" : def.unidad==="min" ? "Minutos" : "Reps"));
     const rInput = el("input","set-input");
     rInput.type="text"; rInput.inputMode="numeric"; rInput.autocomplete="off";
     rInput.value=s.reps;
@@ -2388,44 +2662,50 @@ function renderExercise(){
 /* ---------- PLANIFICACIÓN SEMANAL (drag & drop táctil propio) ---------- */
 const COLOR_HEX = {rojo:"#C0504D", naranja:"#D97B29", amarillo:"#D4AC0D", verde:"#2E8B57", blanco:"#B7BEC9"};
 
-function pointsForDay(day){
-  return (DB.weekPlan[day]||[]).reduce((sum,b)=>{ const act=DB.activities.find(a=>a.id===b.activityId); return sum+(act?act.puntos:0); },0);
+function actById(id){ return DB.activities.find(a=>a.id===id); }
+
+function pointsForDay(key){
+  return planFor(key).reduce((sum,b)=>{ const a=actById(b.activityId); return sum+(a?a.puntos:0); },0);
 }
-function dayHasColor(day, color){
-  return (DB.weekPlan[day]||[]).some(b=>{ const act=DB.activities.find(a=>a.id===b.activityId); return act && act.color===color; });
+function dayHasColor(key, color){
+  return planFor(key).some(b=>{ const a=actById(b.activityId); return a && a.color===color; });
 }
-function dayHasPlyo(day){
-  return (DB.weekPlan[day]||[]).some(b=>{ const act=DB.activities.find(a=>a.id===b.activityId); return act && act.plyo; });
+function dayHasPlyo(key){
+  return planFor(key).some(b=>{ const a=actById(b.activityId); return a && a.plyo; });
 }
-function effectiveLimitForDay(dayIdx){
-  if(DB.planRules.noConsecutiveRed && dayIdx>0 && dayHasColor(WEEK_DAYS[dayIdx-1], "rojo")){
+// El límite baja si el día ANTERIOR del calendario tuvo una actividad roja,
+// aunque ese día pertenezca a la semana previa.
+function effectiveLimitForDay(key){
+  if(DB.planRules.noConsecutiveRed && dayHasColor(prevKey(key), "rojo")){
     return DB.planRules.redConsecutiveLimit;
   }
   return DB.planRules.dailyLimit;
 }
-function weekNeedsRestWarning(){
+// Aviso de falta de descanso referido a la semana que estás viendo.
+function weekNeedsRestWarning(dates){
   if(!DB.planRules.requireRestDay) return false;
-  return WEEK_DAYS.every(d=> pointsForDay(d) > 0);
+  return dates.every(d=> pointsForDay(planKey(d)) > 0);
 }
-function tendonWarning(dayIdx){
-  if(dayIdx===0) return false;
-  return dayHasColor(WEEK_DAYS[dayIdx-1], "naranja") && dayHasPlyo(WEEK_DAYS[dayIdx]);
+function tendonWarning(key){
+  return dayHasColor(prevKey(key), "naranja") && dayHasPlyo(key);
 }
-function addActivityToDay(day, activityId){
-  const act = DB.activities.find(a=>a.id===activityId);
+function addActivityToDay(key, activityId){
+  const act = actById(activityId);
   if(!act) return;
-  const dayIdx = WEEK_DAYS.indexOf(day);
-  const current = pointsForDay(day);
-  const limit = effectiveLimitForDay(dayIdx);
-  if(current + act.puntos > limit){
-    toast("Sobrecarga: "+day+" supera el límite de "+limit+" puntos");
+  const actual = pointsForDay(key);
+  const limite = effectiveLimitForDay(key);
+  if(actual + act.puntos > limite){
+    toast("Sobrecarga: ese día supera el límite de "+limite+" puntos");
     return;
   }
-  DB.weekPlan[day].push({instanceId:uid(), activityId});
+  if(!DB.plan[key]) DB.plan[key] = [];
+  DB.plan[key].push({instanceId:uid(), activityId});
   saveDB(); render();
 }
-function removeFromDay(day, instanceId){
-  DB.weekPlan[day] = DB.weekPlan[day].filter(b=>b.instanceId!==instanceId);
+function removeFromDay(key, instanceId){
+  if(!DB.plan[key]) return;
+  DB.plan[key] = DB.plan[key].filter(b=>b.instanceId!==instanceId);
+  if(DB.plan[key].length===0) delete DB.plan[key];
   saveDB(); render();
 }
 
@@ -2564,7 +2844,10 @@ function showPlanRulesModal(){
     const del = el("div","edit-del","Borrar");
     del.onclick = ()=>{
       DB.activities = DB.activities.filter(a=>a.id!==act.id);
-      WEEK_DAYS.forEach(d=>{ DB.weekPlan[d] = DB.weekPlan[d].filter(b=>b.activityId!==act.id); });
+      Object.keys(DB.plan).forEach(k=>{
+        DB.plan[k] = DB.plan[k].filter(b=>b.activityId!==act.id);
+        if(!DB.plan[k].length) delete DB.plan[k];
+      });
       saveDB(); closeModal(overlay); showPlanRulesModal();
     };
     row.appendChild(del);
@@ -2580,6 +2863,8 @@ function showPlanRulesModal(){
   document.body.appendChild(overlay);
 }
 
+let PLAN_WEEK = 0; // 0 = semana actual, -1 anterior, +1 siguiente
+
 function renderPlanning(){
   const wrap = el("div");
   const top = el("div","topbar");
@@ -2591,14 +2876,37 @@ function renderPlanning(){
   top.appendChild(gear);
   wrap.appendChild(top);
   wrap.appendChild(el("h1","title","Planificación"));
-  wrap.appendChild(el("div","routine-tags","Arrastra una actividad a un día"));
-  wrap.appendChild(el("div",null,"<div style='height:12px'></div>"));
 
-  if(weekNeedsRestWarning()){
-    wrap.appendChild(el("div","plan-alert","⚠️ Falta descanso: los 7 días tienen actividad. Deja al menos uno vacío."));
+  const dates = weekDates(PLAN_WEEK);
+  const hoyKey = planKey(new Date());
+
+  // Navegación entre semanas
+  const nav = el("div","week-nav");
+  const prev = el("div","week-nav-btn","‹");
+  prev.onclick = ()=>{ PLAN_WEEK--; render(); };
+  const next = el("div","week-nav-btn","›");
+  next.onclick = ()=>{ PLAN_WEEK++; render(); };
+  const label = el("div","week-nav-label");
+  label.appendChild(el("div","week-nav-range", formatDayRange(dates)));
+  const rel = PLAN_WEEK===0 ? "Esta semana"
+            : PLAN_WEEK===1 ? "Semana que viene"
+            : PLAN_WEEK===-1 ? "Semana pasada"
+            : (PLAN_WEEK>0 ? "En "+PLAN_WEEK+" semanas" : "Hace "+Math.abs(PLAN_WEEK)+" semanas");
+  label.appendChild(el("div","week-nav-rel", rel));
+  nav.appendChild(prev); nav.appendChild(label); nav.appendChild(next);
+  wrap.appendChild(nav);
+
+  if(PLAN_WEEK!==0){
+    const hoyBtn = el("div","week-today","Ir a esta semana");
+    hoyBtn.onclick = ()=>{ PLAN_WEEK = 0; render(); };
+    wrap.appendChild(hoyBtn);
   }
 
-  /* Banco de actividades: rejilla que envuelve, para verlas todas sin scroll lateral */
+  if(weekNeedsRestWarning(dates)){
+    wrap.appendChild(el("div","plan-alert","⚠️ Falta descanso: los 7 días de esta semana tienen actividad. Deja al menos uno vacío."));
+  }
+
+  // Banco de actividades
   const bank = el("div","bank-grid");
   DB.activities.forEach(act=>{
     const chip = el("div","act-chip"+(PLAN_SELECTED===act.id?" selected":""));
@@ -2610,78 +2918,87 @@ function renderPlanning(){
   });
   wrap.appendChild(bank);
   if(PLAN_SELECTED){
-    const hint = el("div","plan-hint","👆 Toca el día donde quieres añadirla (o toca la actividad otra vez para cancelar)");
-    wrap.appendChild(hint);
+    wrap.appendChild(el("div","plan-hint","👆 Toca el día donde quieres añadirla (o toca la actividad otra vez para cancelar)"));
   }
   const addActBtn = el("div","add-ex-btn","+ Crear nueva actividad");
   addActBtn.onclick = ()=> showActivityFormModal();
   wrap.appendChild(addActBtn);
 
-  /* 7 columnas compactas: L M X J V S D */
+  // Rejilla de 7 columnas con fecha real
   const grid = el("div","week-grid");
-  WEEK_DAYS.forEach((day,idx)=>{
-    const col = el("div","day-col"+(PLAN_SELECTED?" awaiting":""));
-    col.dataset.day = day;
+  dates.forEach((fecha,idx)=>{
+    const key = planKey(fecha);
+    const col = el("div","day-col"+(PLAN_SELECTED?" awaiting":"")+(key===hoyKey?" today":""));
+    col.dataset.day = key;
     col.onclick = ()=>{
       if(!PLAN_SELECTED) return;
       const chosen = PLAN_SELECTED;
       PLAN_SELECTED = null;
-      addActivityToDay(day, chosen);
+      addActivityToDay(key, chosen);
     };
-    const limit = effectiveLimitForDay(idx);
-    const pts = pointsForDay(day);
+    const limite = effectiveLimitForDay(key);
+    const pts = pointsForDay(key);
+
     col.appendChild(el("div","day-letter", DAY_LETTERS[idx]));
+    col.appendChild(el("div","day-num", String(fecha.getDate())));
 
     const meter = el("div","day-meter");
     const fill = el("div","day-meter-fill");
-    const ratio = Math.min(1, limit>0 ? pts/limit : 0);
+    const ratio = Math.min(1, limite>0 ? pts/limite : 0);
     fill.style.height = (ratio*100)+"%";
-    fill.style.background = pts>limit ? "var(--danger)" : (ratio>=1 ? "var(--danger)" : "var(--accent)");
+    fill.style.background = ratio>=1 ? "var(--danger)" : "var(--accent)";
     meter.appendChild(fill);
     col.appendChild(meter);
 
     const blocks = el("div","day-col-blocks");
-    (DB.weekPlan[day]||[]).forEach(b=>{
-      const act = DB.activities.find(a=>a.id===b.activityId);
+    planFor(key).forEach(b=>{
+      const act = actById(b.activityId);
       if(!act) return;
       const dot = el("div","day-mini");
       dot.style.background = COLOR_HEX[act.color];
       dot.title = act.nombre;
-      dot.onclick = (ev)=>{ ev.stopPropagation(); removeFromDay(day, b.instanceId); };
+      dot.onclick = (ev)=>{ ev.stopPropagation(); removeFromDay(key, b.instanceId); };
       blocks.appendChild(dot);
     });
     col.appendChild(blocks);
-
-    if(tendonWarning(idx)) col.appendChild(el("div","day-col-warn","⚠️"));
+    if(tendonWarning(key)) col.appendChild(el("div","day-col-warn","⚠️"));
     grid.appendChild(col);
   });
   wrap.appendChild(grid);
 
-  /* Detalle por día, debajo: qué hay exactamente y poder quitarlo */
-  WEEK_DAYS.forEach((day,idx)=>{
-    const blocks = DB.weekPlan[day]||[];
-    if(blocks.length===0) return;
+  // Detalle de los días con actividad de esta semana
+  let algo = false;
+  dates.forEach((fecha,idx)=>{
+    const key = planKey(fecha);
+    const bloques = planFor(key);
+    if(!bloques.length) return;
+    algo = true;
     const row = el("div","day-detail");
-    row.appendChild(el("div","day-detail-name", day));
+    const nombre = WEEK_DAYS[idx]+" "+fecha.getDate();
+    const head = el("div","day-detail-name", nombre + (key===hoyKey ? " · hoy" : ""));
+    row.appendChild(head);
     const list = el("div","day-blocks");
-    blocks.forEach(b=>{
-      const act = DB.activities.find(a=>a.id===b.activityId);
+    bloques.forEach(b=>{
+      const act = actById(b.activityId);
       if(!act) return;
       const block = el("div","day-block");
       block.style.background = COLOR_HEX[act.color];
       if(act.color==="blanco" || act.color==="amarillo") block.style.color = "#2b2b2b";
       block.appendChild(el("span",null, act.nombre));
       const x = el("span","day-block-x","✕");
-      x.onclick = ()=> removeFromDay(day, b.instanceId);
+      x.onclick = ()=> removeFromDay(key, b.instanceId);
       block.appendChild(x);
       list.appendChild(block);
     });
     row.appendChild(list);
-    if(tendonWarning(idx)){
-      row.appendChild(el("div","day-warning","⚠️ Tendones: ayer hubo Naranja y hoy hay potencia/pliometría. Considera intercalar un día Verde o Blanco."));
+    if(tendonWarning(key)){
+      row.appendChild(el("div","day-warning","⚠️ Tendones: el día anterior hubo Naranja y hoy hay potencia/pliometría. Considera intercalar un día Verde o Blanco."));
     }
     wrap.appendChild(row);
   });
+  if(!algo){
+    wrap.appendChild(el("div","empty-note","Semana vacía. Arrastra actividades del banco a un día, o tócalas y luego toca el día."));
+  }
 
   return wrap;
 }
@@ -2726,7 +3043,7 @@ function importBackupFile(onDone){
       let parsed;
       try{ parsed = JSON.parse(String(reader.result)); }
       catch(e){ toast("Ese archivo no es una copia válida"); input.remove(); return; }
-      if(!parsed || typeof parsed !== "object" || (!parsed.exercises && !parsed.sessions && !parsed.weekPlan)){
+      if(!parsed || typeof parsed !== "object" || (!parsed.exercises && !parsed.sessions && !parsed.weekPlan && !parsed.plan)){
         toast("Ese archivo no parece una copia de Bulk Up"); input.remove(); return;
       }
       const nSes = Array.isArray(parsed.sessions) ? parsed.sessions.length : 0;
@@ -3125,9 +3442,10 @@ function renderEditor(){
   top.appendChild(back);
   wrap.appendChild(top);
   wrap.appendChild(el("h1","title","Editar rutina"));
+  wrap.appendChild(el("div","routine-tags", isPubalgiaOn() ? "Editando la rutina de recuperación (pubalgia)" : "Editando la rutina normal"));
   wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
 
-  Object.values(DB.routines).forEach(r=>{
+  visibleRoutines().forEach(r=>{
     wrap.appendChild(el("div","section-label", r.nombre+" · "+r.tags));
     r.ejercicios.forEach((exId,idx)=>{
       const def = DB.exercises[exId];
@@ -3342,7 +3660,8 @@ function renderRestTimer(){
 function showNextExerciseModal(currentDef){
   if(!ACTIVE_SESSION) return;
   const routine = DB.routines[ACTIVE_SESSION.routineId];
-  const others = routine.ejercicios.filter(id=>id!==currentDef.id).map(id=>DB.exercises[id]).filter(Boolean);
+  if(!routine) return;
+  const others = routine.ejercicios.filter(id=>id!==currentDef.id).map(id=>effDef(id, routine.id)).filter(Boolean);
   const overlay = el("div","modal-overlay");
   overlay.onclick = (e)=>{ if(e.target===overlay) closeModal(overlay); };
   const box = el("div","modal-box");

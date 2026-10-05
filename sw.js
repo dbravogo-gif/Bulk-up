@@ -1,7 +1,7 @@
 /* Bulk Up — Service Worker
    Sube APP_VERSION cada vez que publiques cambios: eso invalida la caché
    antigua y hace que la app se actualice sola en el móvil. */
-const APP_VERSION = "v1.6.0";
+const APP_VERSION = "v1.8.0";
 const CACHE = "bulkup-" + APP_VERSION;
 
 const ASSETS = [
