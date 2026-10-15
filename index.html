@@ -223,6 +223,32 @@ body.resting #app{padding-bottom:150px;}
 .pub-toggle-dot{position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:#fff;
   box-shadow:0 1px 3px rgba(0,0,0,.25); transition:left .15s;}
 .pub-toggle.on .pub-toggle-dot{left:22px;}
+.pub-link{color:#0F7C80; font-weight:700; text-decoration:underline; white-space:nowrap;}
+.set-nocarga{text-align:center; font-size:13px; color:var(--muted); padding:11px 0;}
+.nrm-body{font-size:13.5px; line-height:1.5; color:#3A4454;}
+.nrm-body p{margin:0 0 10px;}
+.nrm-body ul{margin:0 0 10px; padding-left:18px;}
+.nrm-body li{margin-bottom:5px;}
+.nrm-h{font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#0F7C80; margin:14px 0 6px;}
+.nrm-t{width:100%; border-collapse:collapse; margin-bottom:10px; font-size:12.5px;}
+.nrm-t td{border-bottom:1px solid var(--line); padding:6px 4px; vertical-align:top;}
+.nrm-t td:first-child{font-weight:600; width:44%;}
+.seg{display:flex; gap:6px; margin-bottom:10px;}
+.seg-btn{flex:1; text-align:center; padding:10px 4px; border-radius:10px; background:var(--surface-2);
+  border:1px solid var(--line); font-size:13.5px; font-weight:600; color:#4A5568;}
+.seg-btn.on.good{background:#2E8B57; border-color:#2E8B57; color:#fff;}
+.seg-btn.on.mid{background:#D4AC0D; border-color:#D4AC0D; color:#fff;}
+.seg-btn.on.bad{background:var(--danger); border-color:var(--danger); color:#fff;}
+.sint-q{font-size:12.5px; font-weight:600; color:#4A5568; margin:10px 0 6px;}
+.sint-ta{width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+  border-radius:10px; padding:10px 12px; font-size:14px; font-family:inherit; margin-bottom:6px;}
+.sint-hint{font-size:12px; color:#0B5558; background:#E8F5F5; border-radius:8px; padding:8px 10px; margin:6px 0 10px;}
+.sint-card{background:var(--surface); border:1.5px solid #0F7C80; border-radius:14px; padding:13px 15px; margin-bottom:12px;}
+.sint-card-q{font-size:15px; font-weight:700; margin-bottom:2px;}
+.sint-card-sub{font-size:12px; color:var(--muted); margin-bottom:10px;}
+.hist-chip.sint-good{background:#EAF6EE; color:#2E8B57;}
+.hist-chip.sint-mid{background:#FFF6D6; color:#8A6D00;}
+.hist-chip.sint-bad{background:#FDEDEC; color:#A63A31;}
 .pub-note{background:#E8F5F5; border:1px solid #9FD0D2; color:#0B5558; border-radius:11px;
   padding:10px 13px; font-size:12.5px; line-height:1.5; margin-bottom:14px;}
 .brand-logo{width:52px; height:52px; border-radius:13px; flex-shrink:0; object-fit:cover;}
@@ -380,7 +406,7 @@ const MOVEMENT_TYPES = {
   CAR:  {label:"Carry",                   color:"#2F5D9F", desc:"Transportar carga manteniendo una postura sólida: caminar de forma natural, tronco estable, sin balancearse, respiración controlada."},
   COND: {label:"Condicionamiento",        color:"#7A5230", desc:"Ritmo alto y cierto grado de fatiga buscado, con recuperación suficiente entre esfuerzos. No es hipertrofia ni potencia pura."},
   COOR: {label:"Coordinación / Locomoción",color:"#2F5D9F", desc:"Controlado al inicio; después puede aumentar la velocidad manteniendo la coordinación. Prioridad: calidad del patrón, no agotamiento."},
-  REH:  {label:"Rehabilitación",          color:"#0F7C80", desc:"Carga progresiva y controlada de la zona en recuperación. Esfuerzo moderado (5-7/10). Regla de dolor: 0-2/10 aceptable; 3/10 reduce rango o carga; más de 3/10, dolor creciente o punzante: para ese ejercicio."},
+  REH:  {label:"Rehabilitación",          color:"#0F7C80", desc:"Trabajo controlado de la zona en recuperación, siguiendo la pauta del fisio. Carga baja, sin forzar el recorrido ni apretar al máximo. La fatiga muscular normal no es dolor; un pinchazo en la ingle significa parar el ejercicio."},
   ADU:  {label:"Aductores",               color:"#8A4B6E", desc:"Trabajo específico de aductores, generalmente isométrico o de baja carga. Progresión muy gradual: debe sentirse como trabajo muscular, nunca como dolor en la zona."}
 };
 function movementBadge(code){
@@ -1443,33 +1469,203 @@ PUB_RAW.forEach(([id,nombre,series,repMin,repMax,unidad,repNota,tipos,objetivo,g
   }, ficha);
 });
 
-const PUB_PIERNA = {rirMin:3, rirMax:4};
-const PUBALGIA_ROUTINES = {
-  pub1: {id:"pub1", set:"pubalgia", nombre:"Día 1", tags:"Fuerza + Potencia controlada",
-    nota:"Carga de pierna ~70-80 % de la habitual, RIR 3-4. Sin potencia explosiva todavía.",
-    ejercicios:["e3_box_squat","e3_landmine_press_uni","e2_prensa_piernas","e2_dominadas_asistidas","e2_press_pecho_maquina","e2_remo_maquina","e3_step_up_bajo","e2_pallof_press","e2_dead_bug","e3_hip_flexor_hk","e3_adductor_rockback","e2_thread_the_needle"],
-    overrides:{ e2_prensa_piernas: PUB_PIERNA }},
-  pub2: {id:"pub2", set:"pubalgia", nombre:"Día 2", tags:"Movilidad + Rehabilitación + Estabilidad",
-    nota:"Día específico de pubalgia. Estimular + recuperar, sin buscar fatiga máxima.",
-    ejercicios:["e3_bici_suave","e2_movilidad_tobillo","e2_90_90_hip_switches","e3_aduccion_iso_pelota","e3_aduccion_banda","e2_copenhagen_plank_corto","e2_single_leg_reach","e2_bird_dog","e2_side_plank","e3_puente_gluteo_uni","e3_hip_flexor_hk","e3_adductor_stretch","e3_prone_pressup"],
-    overrides:{
-      e2_copenhagen_plank_corto:{repMin:15, repMax:25, tipoMovimiento:["REH","ADU"], objetivo:"Fuerza aductora + core"},
-      e2_single_leg_reach:{objetivo:"Control dinámico de cadera"} }},
-  pub3: {id:"pub3", set:"pubalgia", nombre:"Día 3", tags:"Fuerza funcional + Cadena posterior",
-    nota:"El Cossack es parcial y asistido: no busques todavía una apertura grande del aductor.",
-    ejercicios:["e3_goblet_caja","e2_flexiones_inclinadas","e2_remo_trx","e2_hip_thrust","e2_face_pull","e3_pmr_bilateral","e2_step_up_cajon","e2_farmer_carry","e2_plank_shoulder_taps","e3_cossack_parcial","e3_hip_flexor_hk","e2_worlds_greatest_stretch"],
-    overrides:{
-      e2_step_up_cajon: PUB_PIERNA,
-      e3_hip_flexor_hk:{repMin:30, repMax:30} }},
-  pub4: {id:"pub4", set:"pubalgia", nombre:"Día 4", tags:"Atlético + Coordinación + Rehabilitación",
-    nota:"Sustituye temporalmente al Día 4 explosivo. Segundo estímulo de aductor (isométrico).",
-    ejercicios:["e3_marcha_rodilla_alta","e3_landmine_press_split","e3_step_down","e2_press_unilateral_mancuerna","e3_hip_hinge_uni","e2_suitcase_carry","e2_sled_push","e2_bear_crawl_d4","e2_pallof_press","e3_aduccion_iso_pelota","e2_90_90_rotacion","e3_hip_flexor_hk","e3_adductor_rockback"],
-    overrides:{
-      e2_sled_push:{repMin:45, repMax:60},
-      e2_pallof_press:{repMin:8, repMax:10, tipoMovimiento:["COR","EST"], objetivo:"Anti-rotación + estabilidad"},
-      e3_aduccion_iso_pelota:{series:2, repMin:30, repMax:30, objetivo:"Segundo estímulo aductor"},
-      e3_adductor_rockback:{repMin:8, repMax:8} }}
+/* ============ RUTINA PUBALGIA — PAUTA DEL FISIO (fase actual) ============
+   Lunes Superior A · Martes Inferior A · Jueves Superior B · Viernes Inferior B.
+   restSeg = descanso fijo entre series (manda sobre el de la categoría).
+   sinCarga = sin campo de peso. prefill = se rellenan las reps al abrir. */
+function pubEx(o){
+  return Object.assign({
+    grupo:[], series:2, repMin:12, repMax:15, unidad:"reps", repNota:"",
+    rirMin:3, rirMax:4, tipo:"", descripcion:"",
+    ejecucion:[], errores:[], consejos:[], progresion:[], observaciones:[]
+  }, o, { descansoSeg: o.restSeg || 60 });
+}
+const PUB_EX = {
+  e4_calent_caminar: pubEx({nombre:"Calentamiento caminando", series:1, repMin:5, repMax:7, unidad:"min",
+    rirMin:null, rirMax:null, tipoMovimiento:["COND"], objetivo:"Entrar en calor", calentamiento:true, sinCarga:true, descansoTxt:"—"}),
+  e4_remo_pecho_apoyado: pubEx({nombre:"Remo con pecho apoyado", series:3, repMin:10, repMax:12, restSeg:90,
+    grupo:["Espalda"], tipoMovimiento:["HIP"],
+    objetivo:"Trabajar la musculatura de la espalda reduciendo la necesidad de estabilización del tronco.",
+    ejecucion:["Ajustar el apoyo contra el pecho.","Mantener hombros relajados y espalda neutra.","Llevar las empuñaduras hacia el tronco sin balancearse.","Regresar lentamente, sin dejar caer el peso."],
+    errores:["Tirar con impulso.","Encoger los hombros.","Despegar el pecho del apoyo."],
+    progresion:["Aumentar repeticiones antes que carga, manteniendo 3-4 RIR."]}),
+  e4_jalon_pecho: pubEx({nombre:"Jalón al pecho", series:2, repMin:10, repMax:12, restSeg:90,
+    grupo:["Dorsal ancho","Bíceps"], tipoMovimiento:["HIP"],
+    objetivo:"Trabajar dorsales y flexores del codo.",
+    ejecucion:["Sujetar la barra con una apertura cómoda.","Mantener el tronco estable y ligeramente inclinado si la máquina lo requiere.","Llevar la barra hacia la parte superior del pecho.","Volver lentamente sin dar tirones."],
+    errores:["Balancear el tronco.","Inclinarse excesivamente hacia atrás.","Utilizar impulso de las piernas."],
+    progresion:["Mantener la carga si para completar las últimas repeticiones necesitas hacer fuerza excesiva con el abdomen."]}),
+  e4_elev_lat_maquina: pubEx({nombre:"Elevaciones laterales en máquina", restSeg:60,
+    grupo:["Deltoides lateral"], tipoMovimiento:["HIP"],
+    objetivo:"Fortalecer el deltoides medio.",
+    ejecucion:["Ajustar los apoyos a la altura de los brazos.","Elevar los brazos lateralmente de forma controlada.","Detenerse antes de encoger los hombros.","Descender lentamente."],
+    errores:["Balancearse.","Elevar los hombros hacia las orejas.","Buscar un recorrido excesivo."],
+    progresion:["Aumentar la carga solo cuando el movimiento sea limpio y sin compensaciones."]}),
+  e4_curl_biceps_maquina: pubEx({nombre:"Curl de bíceps en máquina", restSeg:60,
+    grupo:["Bíceps"], tipoMovimiento:["HIP"],
+    objetivo:"Mantener la fuerza de los flexores del codo.",
+    ejecucion:["Ajustar el asiento y apoyar los brazos en el soporte.","Flexionar los codos sin levantar los hombros.","Regresar lentamente sin dejar caer el peso."],
+    errores:["Balancear el cuerpo.","Despegar los brazos del apoyo.","Realizar repeticiones rápidas."],
+    progresion:["Aumentar primero las repeticiones dentro del intervalo indicado."]}),
+  e4_ext_triceps_polea: pubEx({nombre:"Extensión de tríceps en polea", restSeg:60,
+    grupo:["Tríceps"], tipoMovimiento:["HIP"],
+    objetivo:"Mantener la fuerza del tríceps.",
+    ejecucion:["Mantener los codos cerca del cuerpo.","Extender los antebrazos sin mover los hombros.","Regresar lentamente a la posición inicial.","Mantener una postura estable sin forzar el abdomen."],
+    errores:["Inclinarse sobre la polea.","Balancearse.","Utilizar demasiado peso."],
+    progresion:["Incrementar la carga únicamente si puedes mantener la postura sin compensaciones."]}),
+
+  e4_calent_inferior: pubEx({nombre:"Caminata suave o bicicleta", series:1, repMin:5, repMax:8, unidad:"min",
+    rirMin:null, rirMax:null, tipoMovimiento:["COND"], objetivo:"Calentamiento muy suave", calentamiento:true, sinCarga:true, descansoTxt:"—"}),
+  e4_calent_caminata: pubEx({nombre:"Caminata suave", series:1, repMin:5, repMax:8, unidad:"min",
+    rirMin:null, rirMax:null, tipoMovimiento:["COND"], objetivo:"Calentamiento muy suave", calentamiento:true, sinCarga:true, descansoTxt:"—"}),
+  e4_ext_rodilla: pubEx({nombre:"Extensión de rodilla en máquina", seriesMin:2, series:3, rirMin:4, rirMax:4, restSeg:75, descansoTxt:"60-90 s",
+    grupo:["Cuádriceps"], tipoMovimiento:["HIP"],
+    objetivo:"Mantener la musculatura del cuádriceps con un movimiento estable.",
+    ejecucion:["Ajustar el eje de la máquina a la altura de la rodilla.","Colocar el rodillo por encima del empeine.","Extender las rodillas sin dar tirones.","Regresar de forma controlada."],
+    errores:["Bloquear las rodillas con fuerza.","Rebotar.","Elevar la pelvis del asiento."],
+    progresion:["Empezar con una carga ligera.","Aumentar solo si no hay molestias inguinales y el esfuerzo sigue siendo moderado."]}),
+  e4_curl_femoral: pubEx({nombre:"Curl femoral sentado", seriesMin:2, series:3, rirMin:4, rirMax:4, restSeg:75, descansoTxt:"60-90 s",
+    grupo:["Isquiotibiales"], tipoMovimiento:["HIP"],
+    objetivo:"Mantener la fuerza de los isquiotibiales.",
+    ejecucion:["Ajustar el respaldo y el rodillo a la anatomía de la máquina.","Flexionar las rodillas llevando el rodillo hacia abajo y atrás.","Mantener brevemente la posición sin apretar al máximo.","Regresar despacio."],
+    errores:["Utilizar impulso.","Levantar la pelvis.","Forzar el recorrido final."],
+    progresion:["Conservar 4 RIR y comprobar que el ejercicio no produce molestias en la ingle."]}),
+  e4_abduccion: pubEx({nombre:"Abducción de cadera en máquina", series:3, rirMin:4, rirMax:4, restSeg:75, descansoTxt:"60-90 s",
+    grupo:["Glúteo medio","Glúteo menor"], tipoMovimiento:["REH"],
+    objetivo:"Trabajar los músculos que separan las piernas, principalmente glúteo medio y glúteo menor, según el ángulo y el movimiento.",
+    ejecucion:["Sentarse con la espalda apoyada.","Colocar las rodillas contra los soportes.","Separar las piernas lentamente, usando un recorrido cómodo.","Volver a la posición inicial sin dejar que las placas choquen."],
+    errores:["Abrir las piernas bruscamente.","Forzar la amplitud.","Rebotar.","Aumentar la carga para compensar una técnica deficiente."],
+    progresion:["Comenzar con carga baja.","Mantener las tres series durante varias sesiones antes de plantear cualquier aumento.","No es necesario alcanzar el máximo recorrido ni sentir quemazón intensa."],
+    observaciones:["Criterio de parada: cualquier pinchazo en la región inguinal implica detener el ejercicio."]}),
+  e4_movilidad_cadera: pubEx({nombre:"Movilidad dinámica de cadera", series:1, repMin:3, repMax:5, unidad:"min",
+    rirMin:null, rirMax:null, tipoMovimiento:["MOV"], sinCarga:true, descansoTxt:"según necesidad",
+    objetivo:"Conservar el movimiento de la cadera sin recurrir a estiramientos.",
+    ejecucion:["A · Flexión y extensión: de pie, sujetándote a un apoyo si es necesario, lleva una pierna suavemente hacia delante y hacia atrás. 6-8 repeticiones por lado, con recorrido corto.",
+      "B · Apertura lateral: separa una pierna lateralmente y vuelve al centro, sin forzar la apertura ni inclinar el tronco para aumentar el recorrido. 6-8 repeticiones por lado.",
+      "C · Gesto de pase: simula un pase corto con la pierna, sin golpear fuerte, girar bruscamente la pelvis ni buscar amplitud máxima. 5-6 repeticiones por lado, solo si el gesto es completamente cómodo."],
+    errores:["Rebotes.","Velocidad.","Gestos explosivos.","Cualquier movimiento que provoque un pinchazo."],
+    progresion:["Primero mejorar el control y la comodidad.","La velocidad y la amplitud se recuperarán más adelante según la evolución y las indicaciones del fisioterapeuta."]}),
+
+  e4_press_hombro_maquina: pubEx({nombre:"Press de hombros en máquina con respaldo", series:2, repMin:10, repMax:12, restSeg:90,
+    grupo:["Deltoides","Tríceps"], tipoMovimiento:["HIP"],
+    objetivo:"Mantener la fuerza de los deltoides y tríceps.",
+    ejecucion:["Ajustar el asiento para que las empuñaduras queden aproximadamente a la altura de los hombros.","Apoyar la espalda completamente.","Empujar hacia arriba sin bloquear los codos.","Descender de forma controlada."],
+    errores:["Arquear la zona lumbar.","Encoger los hombros.","Impulsarse con las piernas."],
+    progresion:["Mantener 3-4 RIR.","Si necesitas tensar mucho el abdomen o arquear la espalda para completar las repeticiones, reduce la carga."]}),
+  e4_remo_sentado_apoyo: pubEx({nombre:"Remo sentado con apoyo", series:3, repMin:10, repMax:12, restSeg:90,
+    grupo:["Dorsal","Romboides","Espalda"], tipoMovimiento:["HIP"],
+    objetivo:"Trabajar dorsales, romboides y musculatura de la espalda.",
+    ejecucion:["Ajustar el asiento y el apoyo del pecho, si lo tiene.","Mantener el tronco estable.","Llevar las empuñaduras hacia el cuerpo.","Volver despacio a la posición inicial."],
+    errores:["Balancearse.","Adelantar y retrasar el tronco para generar impulso.","Elevar los hombros."],
+    progresion:["Completar todas las series con técnica limpia antes de aumentar la carga."],
+    observaciones:["Si no dispones de una variante con apoyo, puedes repetir el remo de la sesión A en lugar de introducir una variante menos estable."]}),
+  e4_press_inclinado_maquina: pubEx({nombre:"Press de pecho inclinado en máquina", series:2, repMin:10, repMax:12, restSeg:90,
+    grupo:["Pectoral superior","Tríceps"], tipoMovimiento:["HIP"],
+    objetivo:"Trabajar la porción clavicular del pectoral y el tríceps.",
+    ejecucion:["Ajustar el asiento según la máquina.","Mantener la espalda apoyada.","Empujar las empuñaduras hacia delante y arriba.","Regresar lentamente."],
+    errores:["Arquear la espalda.","Levantar la pelvis.","Empujar con las piernas."],
+    progresion:["Comenzar con una carga moderada y mantener 3-4 RIR."]}),
+  e4_pajaros_maquina: pubEx({nombre:"Pájaros en máquina (deltoides posterior)", restSeg:60,
+    grupo:["Deltoides posterior"], tipoMovimiento:["HIP"],
+    objetivo:"Fortalecer el deltoides posterior y contribuir al equilibrio muscular del hombro.",
+    ejecucion:["Sentarse mirando hacia el respaldo de la máquina, según el modelo.","Sujetar las empuñaduras con los brazos delante del cuerpo.","Abrir los brazos hacia los lados sin elevar los hombros.","Volver despacio a la posición inicial."],
+    errores:["Usar impulso.","Encoger los hombros.","Llevar los brazos demasiado atrás."],
+    progresion:["Priorizar un recorrido controlado y una carga baja o moderada."]}),
+  e4_curl_biceps_maq_polea: pubEx({nombre:"Curl de bíceps en máquina o polea", restSeg:60,
+    grupo:["Bíceps"], tipoMovimiento:["HIP"],
+    objetivo:"Mantener la fuerza de los flexores del codo.",
+    ejecucion:["Mantener los codos cerca del cuerpo.","Flexionar los brazos sin mover los hombros.","Descender lentamente."],
+    errores:["Balancear el tronco.","Levantar los codos.","Usar impulso."],
+    progresion:["Mantener 3-4 RIR y aumentar las repeticiones antes que la carga."]})
 };
+Object.keys(PUB_EX).forEach(id=>{ DEFAULT_EXERCISES[id] = Object.assign({id}, PUB_EX[id]); });
+
+// El isométrico con balón conserva su id para no separar el historial que ya tenías.
+DEFAULT_EXERCISES.e3_aduccion_iso_pelota = Object.assign({id:"e3_aduccion_iso_pelota"}, pubEx({
+  nombre:"Isométrico de aductores con balón", series:6, repMin:6, repMax:6, unidad:"segundos",
+  rirMin:null, rirMax:null, restSeg:30, descansoTxt:"30 s entre contracciones", sinCarga:true, prefill:true,
+  grupo:["Aductores"], tipoMovimiento:["REH","ADU"],
+  objetivo:"Activar de manera controlada la musculatura de la cara interna del muslo, siguiendo la indicación del fisioterapeuta.",
+  ejecucion:["Posición: túmbate boca arriba con las rodillas flexionadas y los pies apoyados.","Coloca un balón blando o una almohada firme entre las rodillas.","Mantén la pelvis estable y respira con normalidad.","Aprieta suavemente el balón y mantén la contracción 6 segundos.","Relaja completamente y descansa 30 segundos.","Repite hasta completar seis contracciones, siempre que no haya dolor."],
+  errores:["Apretar al máximo.","Contener la respiración.","Levantar la pelvis.","Aumentar la presión para completar la serie."],
+  consejos:["Contracción suave."],
+  progresion:["No aumentar todavía la intensidad ni la duración por iniciativa propia.","Primero debe tolerarse bien la dosis prescrita."],
+  observaciones:["Criterio de parada: un pinchazo significa detener las contracciones. Si aparece dolor persistente o empeoran los síntomas después, consulta con el fisioterapeuta antes de repetir la sesión.",
+    "Cada «serie» de la app es una contracción de 6 s."]
+}));
+
+const PUB_OV_PRESS = {
+  series:3, repMin:10, repMax:12, rirMin:3, rirMax:4, restSeg:90, descansoSeg:90, tipoMovimiento:["HIP"],
+  objetivo:"Mantener la fuerza de pectoral, tríceps y deltoides anterior.",
+  ejecucion:["Ajustar el asiento para que las empuñaduras queden aproximadamente a la altura del pecho.","Apoyar completamente la espalda.","Empujar de forma controlada, sin bloquear los codos.","Volver despacio a la posición inicial."],
+  errores:["Levantar la pelvis.","Arquear la espalda.","Impulsarse con las piernas.","Contener la respiración."],
+  consejos:[], observaciones:[],
+  progresion:["Primero completar todas las repeticiones con comodidad.","Después aumentar la carga en el incremento mínimo disponible."]
+};
+const PUB_OV_ABD_B = {
+  seriesMin:2, series:3,
+  consejos:["Selecciona una carga que permita mover las piernas sin esfuerzo excesivo.","Separa las piernas lentamente.","Evita forzar el final del recorrido.","Vuelve a la posición inicial sin rebotes."],
+  progresion:["Si no hay molestias durante la sesión ni después, puedes mantener la misma dosis en la siguiente sesión.","Si aparece un pinchazo, detén el ejercicio.","Si las molestias aumentan más tarde o al día siguiente, reduce la carga o suspende temporalmente el ejercicio y consulta con el fisioterapeuta."],
+  observaciones:["Objetivo de hoy: activar los abductores sin provocar síntomas inguinales.","Trabajar mucho los abductores no significa entrenarlos al fallo ni abrir las piernas al máximo. La dosis debe ser tolerable.","Criterio de parada: cualquier pinchazo en la región inguinal implica detener el ejercicio."]
+};
+
+const PUBALGIA_ROUTINES = {
+  pubSupA: {id:"pubSupA", set:"pubalgia", nombre:"Tren superior A", tags:"Lunes · 40-55 min",
+    nota:"Usa máquinas o posiciones con buen apoyo del tronco. Evita impulsarte con las piernas, arquear la espalda o apretar el abdomen con mucha fuerza. Si alguna máquina provoca molestias inguinales al entrar, salir o estabilizarte, omítela. Sin trabajo abdominal al terminar.",
+    ejercicios:["e4_calent_caminar","e2_press_pecho_maquina","e4_remo_pecho_apoyado","e4_jalon_pecho","e4_elev_lat_maquina","e4_curl_biceps_maquina","e4_ext_triceps_polea"],
+    overrides:{ e2_press_pecho_maquina: PUB_OV_PRESS }},
+  pubInfA: {id:"pubInfA", set:"pubalgia", nombre:"Tren inferior A + recuperación", tags:"Martes · 35-50 min",
+    nota:"Menos ejercicios que una sesión normal de piernas. Prioridad: conservar algo de fuerza, trabajar los abductores y hacer el isométrico indicado por el fisio.",
+    ejercicios:["e4_calent_inferior","e4_ext_rodilla","e4_curl_femoral","e4_abduccion","e3_aduccion_iso_pelota","e4_movilidad_cadera"]},
+  pubSupB: {id:"pubSupB", set:"pubalgia", nombre:"Tren superior B", tags:"Jueves · 40-55 min",
+    nota:"Prioriza máquinas con respaldo y apoyo del tronco. Sin impulso de piernas ni ejercicios de pie que exijan estabilización intensa. Sin abdominales, planchas ni explosivos. Si un movimiento provoca molestias en la ingle al colocarte, estabilizarte o ejecutarlo, omítelo.",
+    ejercicios:["e4_calent_caminar","e4_press_hombro_maquina","e4_remo_sentado_apoyo","e4_press_inclinado_maquina","e4_pajaros_maquina","e4_curl_biceps_maq_polea","e4_ext_triceps_polea"]},
+  pubInfB: {id:"pubInfB", set:"pubalgia", nombre:"Tren inferior B + recuperación", tags:"Viernes · 30-45 min",
+    nota:"Carga conservadora. No hace falta aumentar el peso respecto al martes.",
+    ejercicios:["e4_calent_caminata","e4_ext_rodilla","e4_curl_femoral","e4_abduccion","e3_aduccion_iso_pelota","e4_movilidad_cadera"],
+    overrides:{
+      e4_ext_rodilla:{seriesMin:2, series:2},
+      e4_curl_femoral:{seriesMin:2, series:2},
+      e4_abduccion: PUB_OV_ABD_B }}
+};
+
+/* Normas de la fase, para el panel "Normas" */
+const PUB_NORMAS_HTML = `
+<p><b>Objetivo:</b> mantener la fuerza y la condición física mientras reducimos la carga sobre la zona inguinal.</p>
+<div class="nrm-h">Normas generales</div>
+<ul>
+<li><b>Esfuerzo:</b> 3-4 repeticiones en reserva (RIR) en los ejercicios de fuerza. No llegar al fallo.</li>
+<li><b>Dolor:</b> si un ejercicio provoca un pinchazo inguinal, detenlo inmediatamente. No confundas la fatiga muscular normal con dolor en la zona lesionada.</li>
+<li><b>Core:</b> por ahora, sin abdominales dinámicos. Solo el trabajo isométrico indicado por el fisio.</li>
+<li><b>Movilidad:</b> dinámica, lenta y con amplitud cómoda. Nada de estiramientos estáticos ni rebotes.</li>
+<li><b>Potencia:</b> suspendida temporalmente. Sin saltos, sprints ni movimientos explosivos.</li>
+<li><b>Progresión:</b> no aumentar cargas si las molestias empeoran durante el entrenamiento o en las 24-48 h posteriores.</li>
+<li><b>Respiración:</b> respira durante las repeticiones; no contengas el aire para levantar cargas.</li>
+</ul>
+<div class="nrm-h">Semana</div>
+<table class="nrm-t">
+<tr><td>Lunes</td><td>Tren superior A</td></tr>
+<tr><td>Martes</td><td>Tren inferior A + recuperación</td></tr>
+<tr><td>Miércoles</td><td>Descanso o paseo cómodo</td></tr>
+<tr><td>Jueves</td><td>Tren superior B</td></tr>
+<tr><td>Viernes</td><td>Tren inferior B + recuperación</td></tr>
+<tr><td>Fin de semana</td><td>Descanso activo según síntomas</td></tr>
+</table>
+<p>Fútbol, pádel y squash quedan temporalmente fuera mientras impliquen golpeos fuertes, aceleraciones o cambios bruscos de dirección.</p>
+<div class="nrm-h">Cardio del fisio</div>
+<p>5 min de trote suave + 10 min caminando. Solo si te ha confirmado que puedes trotar y lo haces sin dolor. Sin sprints, cambios de dirección ni intervalos. Un único bloque hasta confirmar con él la frecuencia. Si aparece un pinchazo, para.</p>
+<div class="nrm-h">Movilidad el resto de la semana</div>
+<p>Unos minutos en días de entreno y, si te resulta cómodo, en descanso: flexión y extensión controlada de cadera, aperturas laterales de amplitud corta y pases cortos sin golpeo fuerte. Sin estiramientos estáticos ni ganar amplitud a la fuerza.</p>
+<div class="nrm-h">Criterios para progresar</div>
+<table class="nrm-t">
+<tr><td>Sin dolor ni empeoramiento posterior</td><td>Mantener la dosis actual</td></tr>
+<tr><td>Molestia creciente durante una serie</td><td>Detener el ejercicio y revisar la carga</td></tr>
+<tr><td>Pinchazo inguinal</td><td>Parar el ejercicio; no probarlo repetidamente ese día</td></tr>
+<tr><td>Más molestias al día siguiente</td><td>Reducir la carga y consultar si persiste</td></tr>
+<tr><td>Buena tolerancia varias sesiones</td><td>Valorar una progresión gradual con el fisio</td></tr>
+</table>
+<p>No cambiar la rutina solo porque hayan pasado una o dos semanas. La vuelta a explosivos, fútbol y cambios de dirección debe ser progresiva: no tener dolor al caminar no demuestra que la zona esté preparada.</p>
+<p><b>Esta rutina sirve para mantener actividad mientras te recuperas, no para forzar la rehabilitación. Las indicaciones del fisio tienen prioridad.</b></p>`;
 
 const DEFAULT_ROUTINES = {
   dia1: {id:"dia1", nombre:"Día 1", tags:"Fuerza + Potencia",
@@ -1577,7 +1773,7 @@ const DEFAULT_SUPPLEMENTS = [
 // La clave mantiene el nombre antiguo a propósito: cambiarla haría que la app no
 // encontrara los datos ya guardados en dispositivos que venían de la versión anterior.
 const STORAGE_KEY = "gymlog_db";
-const SCHEMA_VERSION = 9; // subir este número cuando se actualice el catálogo/rutina por defecto
+const SCHEMA_VERSION = 10; // subir este número cuando se actualice el catálogo/rutina por defecto
 
 /* ---------- Capa de almacenamiento ----------
    window.storage solo existe dentro del entorno de artifacts de Claude. Si la app se abre
@@ -2115,6 +2311,104 @@ function effDef(exId, routineId){
   }
   return merged;
 }
+/* ---------- Pubalgia: normas y registro de molestias ---------- */
+function showPubNormasModal(){
+  const overlay = el("div","modal-overlay");
+  overlay.onclick = (e)=>{ if(e.target===overlay) closeModal(overlay); };
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","Normas de la fase"));
+  box.appendChild(el("div","nrm-body", PUB_NORMAS_HTML));
+  const btns = el("div","modal-btns");
+  const ok = el("div","modal-btn modal-btn-ok","Entendido");
+  ok.onclick = ()=> closeModal(overlay);
+  btns.appendChild(ok);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+const SINT_DURANTE = [["ninguna","Ninguna"],["leve","Leve"],["pinchazo","Pinchazo"]];
+const SINT_DESPUES = [["bien","Bien"],["leve","Leve"],["peor","Peor"]];
+function sintLabel(opts, v){ const o = opts.find(x=>x[0]===v); return o ? o[1] : "—"; }
+function sintClass(v){ return (v==="pinchazo"||v==="peor") ? "bad" : (v==="leve" ? "mid" : (v ? "good" : "")); }
+// Fila de botones segmentados para elegir un valor
+function segRow(opts, value, onPick){
+  const row = el("div","seg");
+  opts.forEach(([v,lab])=>{
+    const b = el("div","seg-btn"+(value===v?" on "+sintClass(v):""), lab);
+    b.onclick = (ev)=>{ ev.stopPropagation(); onPick(v); };
+    row.appendChild(b);
+  });
+  return row;
+}
+function sintConsejo(s){
+  if(!s) return "";
+  if(s.durante==="pinchazo") return "Pinchazo: no repitas ese ejercicio hoy y revisa la carga.";
+  if(s.manana==="peor" || s.despues==="peor") return "Más molestias después: reduce la carga y consulta con el fisio si persiste.";
+  if(s.durante==="ninguna" && (s.manana==="bien" || (!s.manana && s.despues==="bien"))) return "Sin dolor ni empeoramiento: mantén la dosis actual.";
+  return "";
+}
+function isPubSession(s){
+  if(s.sintomas) return true;
+  const r = DB.routines[s.routineId];
+  if(r) return r.set==="pubalgia";
+  return / · Pubalgia$/.test(s.routineName||""); // sesiones de rutinas de pubalgia anteriores
+}
+function showFinishSymptomsModal(session, onSave){
+  const sint = session.sintomas || {durante:null, despues:null, manana:null, notas:""};
+  const overlay = el("div","modal-overlay");
+  const box = el("div","modal-box");
+  box.appendChild(el("div","modal-title","Registro de la sesión"));
+  box.appendChild(el("div","sint-q","Molestias en la ingle durante el entrenamiento"));
+  const segWrap = el("div");
+  const pintar = ()=>{ segWrap.innerHTML=""; segWrap.appendChild(segRow(SINT_DURANTE, sint.durante, v=>{ sint.durante=v; pintar(); })); };
+  pintar();
+  box.appendChild(segWrap);
+  box.appendChild(el("div","sint-q","Ejercicios bien tolerados o que has tenido que retirar"));
+  const ta = document.createElement("textarea");
+  ta.rows = 3; ta.className = "sint-ta"; ta.placeholder = "Opcional";
+  ta.value = sint.notas || "";
+  ta.oninput = (e)=>{ sint.notas = e.target.value; };
+  box.appendChild(ta);
+  box.appendChild(el("div","sint-hint","Unas horas después y mañana al levantarte te preguntaré cómo está la ingle."));
+  const btns = el("div","modal-btns");
+  const cancel = el("div","modal-btn modal-btn-cancel","Volver");
+  cancel.onclick = ()=> closeModal(overlay);
+  const ok = el("div","modal-btn modal-btn-ok","Guardar entrenamiento");
+  ok.onclick = ()=>{ session.sintomas = sint; closeModal(overlay); onSave(); };
+  btns.appendChild(cancel); btns.appendChild(ok);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+// Pregunta pendiente para la última sesión de pubalgia (horas después / al día siguiente)
+function pendingSymptomPrompt(){
+  const hoy = isoDateStr(), ayer = daysAgoISO(1), anteayer = daysAgoISO(2);
+  for(let i=DB.sessions.length-1; i>=0; i--){
+    const s = DB.sessions[i];
+    if(!s.sintomas) continue;
+    const iso = sessionISO(s);
+    if(iso===hoy && !s.sintomas.despues) return {s, campo:"despues", txt:"¿Cómo está la ingle unas horas después?"};
+    if((iso===ayer || iso===anteayer) && !s.sintomas.manana) return {s, campo:"manana", txt:"¿Cómo te has levantado?"};
+    return null; // solo miramos la sesión registrada más reciente
+  }
+  return null;
+}
+
+// Descanso entre series: el fijo de la pauta si lo hay; si no, el de la categoría.
+function restBetweenSets(def){
+  if(def.restSeg!=null) return def.restSeg;
+  return REST_DICT[categoryOf(def)] || 90;
+}
+function rangoTxt(a,b){ return (a==null||a===b) ? String(b) : a+"-"+b; }
+function seriesTxt(def){
+  const n = rangoTxt(def.seriesMin, def.series);
+  return n + (n==="1" ? " serie" : " series");
+}
+function descansoTxt(def){
+  if(def.descansoTxt) return def.descansoTxt;
+  const sg = def.restSeg!=null ? def.restSeg : def.descansoSeg;
+  return (sg>=120 && sg%60===0) ? (sg/60)+" min" : sg+" s";
+}
 function isPubalgiaOn(){ return !!(DB.settings && DB.settings.pubalgia); }
 function visibleRoutines(){
   const set = isPubalgiaOn() ? "pubalgia" : "normal";
@@ -2130,7 +2424,8 @@ function getOrCreateSessionExercise(exId){
   if(!se){
     const def = curDef(exId);
     const seriesCount = def.series || 3;
-    se = {exId, series: Array.from({length:seriesCount}, ()=>({peso:"",reps:"",done:false}))};
+    const fijo = (def.prefill && def.repMin===def.repMax) ? String(def.repMin) : "";
+    se = {exId, series: Array.from({length:seriesCount}, ()=>({peso:"",reps:fijo,done:false}))};
     ACTIVE_SESSION.ejercicios.push(se);
   }
   return se;
@@ -2289,7 +2584,7 @@ function renderHome(){
   let sub = pubOn ? "Rutina de recuperación activa" : "Usando la rutina normal";
   if(pubOn && DB.settings.pubalgiaSince){
     const dias = Math.max(1, Math.round((new Date(isoDateStr()) - new Date(DB.settings.pubalgiaSince))/86400000) + 1);
-    sub = "Día "+dias+" de recuperación" + (dias>=7 ? " · toca revisar la progresión" : " · revisión a los 7 días");
+    sub = "Día "+dias+" de recuperación";
   }
   swTxt.appendChild(el("div","pub-switch-sub", sub));
   sw.appendChild(swTxt);
@@ -2306,7 +2601,25 @@ function renderHome(){
   };
   wrap.appendChild(sw);
   if(pubOn){
-    wrap.appendChild(el("div","pub-note","<b>Regla de dolor:</b> 0-2/10 aceptable · 3/10 reduce rango o carga · más de 3/10, creciente o punzante: para ese ejercicio. Si al día siguiente estás claramente peor, la sesión fue demasiado exigente."));
+    const pend = pendingSymptomPrompt();
+    if(pend){
+      const pc = el("div","sint-card");
+      pc.appendChild(el("div","sint-card-q", pend.txt));
+      pc.appendChild(el("div","sint-card-sub", "Tras "+pend.s.routineName+" ("+pend.s.fecha+")"));
+      pc.appendChild(segRow(SINT_DESPUES, null, v=>{
+        pend.s.sintomas[pend.campo] = v;
+        saveDB();
+        const c = sintConsejo(pend.s.sintomas);
+        toast(c || "Registrado");
+        render();
+      }));
+      wrap.appendChild(pc);
+    }
+    const nota = el("div","pub-note","<b>Pinchazo en la ingle → para el ejercicio.</b> La fatiga muscular normal no es dolor. RIR 3-4, sin saltos, sprints ni abdominales dinámicos. ");
+    const link = el("span","pub-link","Ver normas de la fase ›");
+    link.onclick = (ev)=>{ ev.stopPropagation(); showPubNormasModal(); };
+    nota.appendChild(link);
+    wrap.appendChild(nota);
   }
 
   visibleRoutines().forEach(r=>{
@@ -2369,16 +2682,23 @@ function renderWorkout(){
   wrap.appendChild(el("div",null,"<div style='height:16px'></div>"));
 
   const routine = DB.routines[ACTIVE_SESSION.routineId];
+  // Si la rutina ya no existe (p. ej. un borrador de una versión anterior), mostramos
+  // lo que tenga la sesión para poder terminarla igualmente.
+  const exIds = routine ? routine.ejercicios : ACTIVE_SESSION.ejercicios.map(e=>e.exId);
+  const esPub = routine ? routine.set==="pubalgia" : !!ACTIVE_SESSION.sintomas;
   if(!routine){
-    wrap.appendChild(el("div","empty-note","Esta rutina ya no existe. Pulsa \"Guardar y salir\"."));
-    return wrap;
+    wrap.appendChild(el("div","empty-note","Esta rutina ya no existe en la app; puedes terminar lo registrado."));
   }
-  if(routine.set==="pubalgia"){
-    wrap.appendChild(el("div","pub-note", (routine.nota ? routine.nota+"<br>" : "")+
-      "<b>Dolor:</b> 0-2/10 ok · 3/10 reduce rango o carga · más de 3/10 o punzante: para ese ejercicio."));
+  if(esPub){
+    const nota = el("div","pub-note", (routine && routine.nota ? routine.nota+"<br>" : "")+
+      "<b>Pinchazo en la ingle → para ese ejercicio.</b> ");
+    const link = el("span","pub-link","Normas ›");
+    link.onclick = ()=> showPubNormasModal();
+    nota.appendChild(link);
+    wrap.appendChild(nota);
   }
-  routine.ejercicios.forEach(exId=>{
-    const def = effDef(exId, routine.id);
+  exIds.forEach(exId=>{
+    const def = effDef(exId, routine ? routine.id : null);
     if(!def) return;
     const row = el("div","ex-row");
     const done = isExerciseDoneInSession(exId);
@@ -2398,7 +2718,7 @@ function renderWorkout(){
       const rango = (a,b)=> a===b ? String(a) : a+"-"+b;
       const rirTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${rango(def.rirMin,def.rirMax)}` : "";
       const notaTxt = def.repNota ? " "+def.repNota : "";
-      body.appendChild(el("div","ex-row-meta", `${def.series} ${def.series===1?'serie':'series'} · ${rango(def.repMin,def.repMax)} ${def.unidad||'reps'}${notaTxt}${rirTxt}`));
+      body.appendChild(el("div","ex-row-meta", `${seriesTxt(def)} · ${rango(def.repMin,def.repMax)} ${def.unidad||'reps'}${notaTxt}${rirTxt}`));
     }
     row.appendChild(body);
     row.onclick = ()=>{ VIEW = {screen:"exercise", exId}; render(); };
@@ -2414,13 +2734,18 @@ function renderWorkout(){
   finishBtn.onclick = ()=>{
     const anySet = ACTIVE_SESSION.ejercicios.some(e=>e.series.some(s=>s.done));
     if(!anySet){ toast("Registra al menos una serie"); return; }
-    DB.sessions.push(ACTIVE_SESSION);
-    if(DB.draftSession && DB.draftSession.id===ACTIVE_SESSION.id) DB.draftSession = null;
-    saveDB();
-    toast("Entrenamiento guardado");
-    ACTIVE_SESSION = null;
-    VIEW = {screen:"home"};
-    render();
+    const guardar = ()=>{
+      DB.sessions.push(ACTIVE_SESSION);
+      if(DB.draftSession && DB.draftSession.id===ACTIVE_SESSION.id) DB.draftSession = null;
+      const consejo = sintConsejo(ACTIVE_SESSION.sintomas);
+      saveDB();
+      toast(consejo || "Entrenamiento guardado");
+      ACTIVE_SESSION = null;
+      VIEW = {screen:"home"};
+      render();
+    };
+    if(esPub) showFinishSymptomsModal(ACTIVE_SESSION, guardar);
+    else guardar();
   };
   wrap.appendChild(finishBtn);
   return wrap;
@@ -2487,6 +2812,10 @@ function renderExercise(){
     row.appendChild(el("div","set-idx","S"+(i+1)));
 
     const wField = el("div");
+    if(def.sinCarga){
+      wField.appendChild(el("div","field-label","Peso"));
+      wField.appendChild(el("div","set-nocarga","sin carga"));
+    } else {
     wField.appendChild(el("div","field-label","Peso (kg)"));
     const wInput = el("input","set-input");
     // type=text + inputmode: con type=number, escribir "82,5" (coma del teclado español)
@@ -2496,6 +2825,7 @@ function renderExercise(){
     wInput.oninput = (e)=>{ s.peso = cleanNumberInput(e.target.value, true); };
     wInput.onblur = (e)=>{ e.target.value = s.peso; };
     wField.appendChild(wInput);
+    }
     row.appendChild(wField);
 
     const rField = el("div");
@@ -2510,7 +2840,8 @@ function renderExercise(){
 
     const chk = el("div","set-check"+(s.done?" done":""), s.done?"✓":"");
     chk.onclick = ()=>{
-      if(!s.done && (s.peso===""||s.reps==="")){ toast("Introduce peso y reps"); return; }
+      // El peso es opcional (peso corporal, movilidad...); lo imprescindible son las reps/tiempo.
+      if(!s.done && s.reps===""){ toast(def.unidad==="segundos"?"Introduce los segundos":def.unidad==="min"?"Introduce los minutos":def.unidad==="m"?"Introduce los metros":"Introduce las reps"); return; }
       const turningOn = !s.done;
       s.done = !s.done;
       saveDraft();
@@ -2519,8 +2850,8 @@ function renderExercise(){
         if(allDone){
           showNextExerciseModal(def);
         } else {
-          const cat = categoryOf(def);
-          startRestTimer(REST_DICT[cat] || 90, "Descanso");
+          const secs = restBetweenSets(def);
+          if(secs>0) startRestTimer(secs, "Descanso");
         }
       }
       render();
@@ -2529,10 +2860,10 @@ function renderExercise(){
     sec1.appendChild(row);
   });
   if(se.series.length>1){
-    const extendBtn = el("div","extend-btn","⇣ Repetir peso y reps en todas las series");
+    const extendBtn = el("div","extend-btn", def.sinCarga ? "⇣ Repetir en todas las series" : "⇣ Repetir peso y reps en todas las series");
     extendBtn.onclick = ()=>{
       const first = se.series[0];
-      if(first.peso===""||first.reps===""){ toast("Rellena primero la serie 1"); return; }
+      if(first.reps===""){ toast("Rellena primero la serie 1"); return; }
       se.series.forEach((s,i)=>{ if(i>0){ s.peso=first.peso; s.reps=first.reps; } });
       render();
     };
@@ -2605,9 +2936,9 @@ function renderExercise(){
   const sec3 = el("div","section");
   sec3.appendChild(el("div","section-label","Progresión"));
   const pcard = el("div","progress-card");
-  const rirGoalTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${def.rirMin}-${def.rirMax}` : "";
+  const rirGoalTxt = (def.rirMin!=null && def.rirMax!=null) ? ` · RIR ${rangoTxt(def.rirMin,def.rirMax)}` : "";
   const notaGoalTxt = def.repNota ? " "+def.repNota : "";
-  pcard.appendChild(el("div","progress-goal", `Objetivo: <b>${def.repMin}–${def.repMax} ${def.unidad||'reps'}${notaGoalTxt}</b>${rirGoalTxt} · descanso ${Math.round(def.descansoSeg/60*10)/10 >= 1 ? Math.round(def.descansoSeg/60*10)/10+" min" : def.descansoSeg+" s"}`));
+  pcard.appendChild(el("div","progress-goal", `Pauta: <b>${rangoTxt(def.seriesMin,def.series)} × ${rangoTxt(def.repMin,def.repMax)} ${def.unidad||'reps'}${notaGoalTxt}</b>${rirGoalTxt} · descanso ${descansoTxt(def)}`));
   (def.progresion||[]).forEach(txt=>{
     const rule = el("div","progress-rule rule-up");
     rule.appendChild(el("div","rule-dot"));
@@ -3350,6 +3681,9 @@ function renderHistory(){
       chips.appendChild(el("div","hist-chip", st.ejercicios+" ejercicios"));
       chips.appendChild(el("div","hist-chip", st.series+" series"));
       if(st.vol>0) chips.appendChild(el("div","hist-chip strong", st.vol+" kg"));
+      if(s.sintomas && s.sintomas.durante){
+        chips.appendChild(el("div","hist-chip sint-"+sintClass(s.sintomas.durante), "Ingle: "+sintLabel(SINT_DURANTE, s.sintomas.durante).toLowerCase()));
+      }
       card.appendChild(chips);
 
       const nombres = (s.ejercicios||[])
@@ -3391,6 +3725,26 @@ function renderHistoryDay(){
   if(st.vol>0) chips.appendChild(el("div","hist-chip strong", st.vol+" kg de volumen"));
   chips.style.margin = "12px 0 18px";
   wrap.appendChild(chips);
+
+  if(isPubSession(s)){
+    if(!s.sintomas) s.sintomas = {durante:null, despues:null, manana:null, notas:""};
+    const sc = el("div","hd-card");
+    sc.appendChild(el("div","hd-name","Registro de molestias"));
+    const filas = [["durante","Durante el entrenamiento",SINT_DURANTE],["despues","Unas horas después",SINT_DESPUES],["manana","Al día siguiente",SINT_DESPUES]];
+    filas.forEach(([campo,lab,opts])=>{
+      sc.appendChild(el("div","sint-q",lab));
+      sc.appendChild(segRow(opts, s.sintomas[campo], v=>{ s.sintomas[campo] = (s.sintomas[campo]===v ? null : v); saveDB(); render(); }));
+    });
+    sc.appendChild(el("div","sint-q","Ejercicios tolerados o retirados"));
+    const ta = document.createElement("textarea");
+    ta.rows = 3; ta.className = "sint-ta"; ta.placeholder = "Opcional";
+    ta.value = s.sintomas.notas || "";
+    ta.oninput = (e)=>{ s.sintomas.notas = e.target.value; saveDB(); };
+    sc.appendChild(ta);
+    const c = sintConsejo(s.sintomas);
+    if(c) sc.appendChild(el("div","sint-hint", c));
+    wrap.appendChild(sc);
+  }
 
   s.ejercicios.forEach(e=>{
     const doneSeries = (e.series||[]).filter(x=>x.done);
@@ -3673,11 +4027,13 @@ function showNextExerciseModal(currentDef){
       closeModal(overlay);
       const nextCat = categoryOf(nextDef);
       let secs;
-      if(nextCat==="POT" || nextCat==="FUE") secs = 120;
+      if(currentDef.calentamiento) secs = 0;               // tras calentar se empieza sin esperar
+      else if(nextDef.restSeg!=null) secs = nextDef.restSeg; // pauta con descanso fijo
+      else if(nextCat==="POT" || nextCat==="FUE") secs = 120;
       else if(["COR","EST","MOV"].includes(nextCat)) secs = 60;
       else if(["HIP","COND"].includes(nextCat)) secs = (bodyPartOf(currentDef)===bodyPartOf(nextDef)) ? 120 : 90;
       else secs = REST_DICT[nextCat] || 90;
-      startRestTimer(secs, "Antes de "+nextDef.nombre);
+      if(secs>0) startRestTimer(secs, "Antes de "+nextDef.nombre);
       VIEW = {screen:"exercise", exId:nextDef.id};
       render();
     };
